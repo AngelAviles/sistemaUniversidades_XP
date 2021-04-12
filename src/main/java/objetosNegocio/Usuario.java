@@ -180,7 +180,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "objetosNegocio.Usuario[ id=" + id + " ]";
+        return "Usuario{" + "id=" + id + ", user=" + user + ", password=" + password + ", curp=" + curp + ", nombre=" + nombre + ", apellido=" + apellido + ", fecha=" + fecha + ", sexo=" + sexo + ", activo=" + activo + ", escuela=" + escuela + '}';
     }
 
 }

@@ -31,5 +31,8 @@
             <input type="submit" value="Generar reporte" />
         </form>
         <p><%=mensaje%></p>
+        
+        <h3>Token:</h3>
+        ${token}
     </body>
 </html>

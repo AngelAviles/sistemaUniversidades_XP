@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import dao.exceptions.NonexistentEntityException;
@@ -164,5 +159,14 @@ public class UsuarioJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public Usuario consultarUsuarioInicioSesion(String user, String password) {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM Usuario c WHERE c.user = :user AND c.password = :password");
+        consulta.setParameter("user", user);
+        consulta.setParameter("password", password);
+        Usuario usuario = (Usuario) consulta.getSingleResult();
+        return usuario;
+    }
+
 }
