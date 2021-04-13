@@ -4,9 +4,17 @@
         <servlet-name>validarSesion</servlet-name>
         <servlet-class>servlets.validarSesion</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>importarAlumnos</servlet-name>
+        <servlet-class>servlets.importarAlumnos</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>validarSesion</servlet-name>
         <url-pattern>/validarSesion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>importarAlumnos</servlet-name>
+        <url-pattern>/importarAlumnos</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -14,6 +22,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>pruebaGenerarKardexJSP.jsp</welcome-file>
+        <welcome-file>inicioSesion.jsp</welcome-file>
     </welcome-file-list>
 </web-app>
