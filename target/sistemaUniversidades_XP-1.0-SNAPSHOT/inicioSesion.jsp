@@ -1,34 +1,45 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-        <title>Inicio sesión</title>
+        <title>Inicio de sesión</title>
+        <link href="estilos/estiloLogin.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <div class="container mt-4 col-lg-4">
-            <div class="card col-sm-10">
-                <div class="card-body">
+
+        <div class="container mt-5 col-lg-7">
+            <div class="card col-sm-12 border-light mb-3">
+                <div class="cuadro-login">
                     <form class="form-sign" action="validarSesion" method="POST">
+
                         <div class="form-group text-center">
-                            <h1>Sistema de universidades</h1>
+                            <h1 class="card-title">Sistema de universidades</h1>
                             <img src="img/imgInicioSesion.png" alt="logo" width="170"/>
                             <br>
-                            <h3>Inicio de sesión</h3>
-                        </div>
-                        <div class="form-group">
-                            <label>Usuario:</label>
-                            <input type="text" name="txtuser" class="form-control" placeholder="Introduzca su usuario">
-                        </div>
-                        <div class="form-group">
-                            <label>Contraseña:</label>
-                            <input type="password" name="txtpass" class="form-control" placeholder="Introduzca su contraseña">
+                            <h3 class="card-subtitle mb-2 text-muted">Sistema para captura y administración de calificaciones</h3>
                         </div>
                         <br>
-                        <div class="form-group" style="text-align: center">
-                            <input type="submit" name="accion" value="Ingresar" class="btn btn-primary btn-success"/>
+                        <div class="form-group">
+                            <label><b>Usuario:</b></label>
+                            <input type="text" name="txtuser" class="form-control" placeholder="Introduzca su usuario">
                         </div>
+                        <br>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label"><b>Contraseña:</b></label>
+                            <input id="password-field" type="password" name="txtpass" class="form-control" placeholder="Introduzca su contraseña">
+                        </div>
+
+                        <br>
+                        <div class="form-group" style="text-align: center">
+                            <input type="submit" name="accion" value="Ingresar" class="btn btn-primary btn-success btn-lg"/>
+                        </div>
+
                     </form>
                 </div>
             </div>

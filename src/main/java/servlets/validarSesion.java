@@ -13,7 +13,7 @@ import jwt.InicioSesionJWT;
 import objetosNegocio.Usuario;
 
 public class validarSesion extends HttpServlet {
-   
+
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
     UsuarioJpaController usuarioDAO = new UsuarioJpaController(factory);
     Usuario usuarioSesion = new Usuario();
@@ -81,12 +81,13 @@ public class validarSesion extends HttpServlet {
                 String tokenUsuario = token.validar(usuarioSesion);
                 request.setAttribute("token", tokenUsuario);
                 request.getRequestDispatcher("pruebaGenerarKardexJSP.jsp").forward(request, response);
-            } catch (IOException | ServletException e) {
-                System.out.println("No existe el usuario" + e);
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+            } catch (Exception e) {
+                request.setAttribute("errorSesion", "Credenciales invalidas");
+                response.setContentType("text/html;charset=UTF-8");
+                response.sendRedirect("inicioSesion.jsp");
             }
         } else {
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
         }
     }
 

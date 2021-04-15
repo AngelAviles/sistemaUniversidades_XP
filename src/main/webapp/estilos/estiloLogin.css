@@ -1,0 +1,7 @@
+.cuadro-login {
+    background: rgba(255, 255, 255, 0.7294117647058823);
+    border-radius: 20px;
+    padding: 40px;
+    border-color: white;
+    box-shadow: 0px 5px 20px black;
+}
