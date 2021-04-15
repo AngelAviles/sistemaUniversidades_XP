@@ -53,10 +53,10 @@
                 <div class="row align-items-center justify-content-center">
                     <div class="col-auto">
                         <div class="border border-black border-3 mb-3">
-                            <form action="importarAlumnos" method="post">
+                            <form action="importarAlumnos" method="post" enctype="multipart/form-data">
                                 <div class="m-3">
                                     <label for="formFileSm" class="form-label">Archivo Excel o CSV</label>
-                                    <input class="form-control form-control-sm" id="formFileSm" name="archivo" type="file">
+                                    <input class="form-control form-control-sm" id="formFileSm" name="archivo" type="file" <%--accept=".xls, .xlsx, .csv"--%> >
                                 </div>
                                 <div class="m-3">
                                     <div class="d-grid gap-6 mx-auto">
@@ -92,7 +92,7 @@
                                         for (int i = 0; i < lista.size(); i++) {
                                             Alumno a = (Alumno) lista.get(i);
                                             out.print("<tr>"
-                                                    + "<td scope=\"row\">" + a.getId() + "</td>"
+                                                    + "<td scope=\"row\">" + a.getMatricula() + "</td>"
                                                     + "<td>" + a.getNombre() + "</td>"
                                                     + "<td>" + a.getCurp() + "</td>"
                                                     + "<tr>"
