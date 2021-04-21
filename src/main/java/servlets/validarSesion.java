@@ -76,15 +76,15 @@ public class validarSesion extends HttpServlet {
             String contrasenia = request.getParameter("txtpass");
             try {
                 usuarioSesion = usuarioDAO.consultarUsuarioInicioSesion(usuario, contrasenia);
-                request.setAttribute("usuario", usuario);
+                String nombreCompleto = usuarioSesion.getNombre() + " " + usuarioSesion.getApellido();
+                request.setAttribute("usuario", nombreCompleto);
                 InicioSesionJWT token = new InicioSesionJWT();
-                String tokenUsuario = token.validar(usuarioSesion);
-                request.setAttribute("token", tokenUsuario);
-                request.getRequestDispatcher("pruebaGenerarKardexJSP.jsp").forward(request, response);
+//                String tokenUsuario = token.validar(usuarioSesion);
+//                request.setAttribute("token", tokenUsuario);
+                request.getRequestDispatcher("menuPrincipal.jsp").forward(request, response);
             } catch (Exception e) {
-                request.setAttribute("errorSesion", "Credenciales invalidas");
-                response.setContentType("text/html;charset=UTF-8");
-                response.sendRedirect("inicioSesion.jsp");
+                request.setAttribute("error", "Error al iniciar sesión, credenciales invalidas");   
+                request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
             }
         } else {
             request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);

@@ -1,7 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,7 +14,6 @@
             <div class="card col-sm-12 border-light mb-3">
                 <div class="cuadro-login">
                     <form class="form-sign" action="validarSesion" method="POST">
-
                         <div class="form-group text-center">
                             <h1 class="card-title">Sistema de universidades</h1>
                             <img src="img/imgInicioSesion.png" alt="logo" width="170"/>
@@ -38,9 +35,11 @@
                         <br>
                         <div class="form-group" style="text-align: center">
                             <input type="submit" name="accion" value="Ingresar" class="btn btn-primary btn-success btn-lg"/>
+                            <br><br>
+                            <h3 style="color:red">${error}</h3>
                         </div>
-
                     </form>
+                    
                 </div>
             </div>
         </div>    
