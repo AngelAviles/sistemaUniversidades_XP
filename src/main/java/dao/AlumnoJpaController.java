@@ -7,6 +7,7 @@ package dao;
 
 import dao.exceptions.IllegalOrphanException;
 import dao.exceptions.NonexistentEntityException;
+import dao.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -15,9 +16,11 @@ import javax.persistence.criteria.Root;
 import objetosNegocio.Calificacion;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import objetosNegocio.Alumno;
+import org.eclipse.persistence.exceptions.DatabaseException;
 
 /**
  *
@@ -34,7 +37,7 @@ public class AlumnoJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Alumno alumno) {
+    public void create(Alumno alumno) throws PreexistingEntityException {
         if (alumno.getCalificaciones() == null) {
             alumno.setCalificaciones(new ArrayList<Calificacion>());
         }
@@ -48,7 +51,9 @@ public class AlumnoJpaController implements Serializable {
                 attachedCalificaciones.add(calificacionesCalificacionToAttach);
             }
             alumno.setCalificaciones(attachedCalificaciones);
+
             em.persist(alumno);
+
             for (Calificacion calificacionesCalificacion : alumno.getCalificaciones()) {
                 Alumno oldAlumnoOfCalificacionesCalificacion = calificacionesCalificacion.getAlumno();
                 calificacionesCalificacion.setAlumno(alumno);
@@ -58,7 +63,11 @@ public class AlumnoJpaController implements Serializable {
                     oldAlumnoOfCalificacionesCalificacion = em.merge(oldAlumnoOfCalificacionesCalificacion);
                 }
             }
-            em.getTransaction().commit();
+            try {
+                em.getTransaction().commit();
+            } catch (Exception e) {
+                throw new PreexistingEntityException("El alumno ya existe.", e);
+            }
         } finally {
             if (em != null) {
                 em.close();
@@ -199,5 +208,5 @@ public class AlumnoJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }
