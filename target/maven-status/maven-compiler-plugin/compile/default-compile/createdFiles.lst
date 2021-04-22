@@ -1,3 +1,4 @@
+dao\EscuelaJpaController.class
 objetosNegocio\MateriasSerializacion.class
 com\mycompany\sistemaUniversidades_XP\NewMain.class
 objetosNegocio\EscuelaPlandeestudio.class
@@ -15,6 +16,7 @@ servlets\generarKardex.class
 dao\UsuarioJpaController.class
 dao\MateriasSerializacionJpaController.class
 dao\AlumnoJpaController.class
+dao\CalificacionJpaController.class
 objetosNegocio\Plandeestudio.class
 dao\MateriaJpaController.class
 dao\PlandeestudioJpaController.class

@@ -38,14 +38,15 @@
             <img src="img/imgInicioSesion.png" alt="iconoEscuela" width="250" height="250"/>
             <br><br>
             <h3>Sistema para captura y administración de calificaciones</h3>
-            <form action="index.html">
-                <button class="btn btn-secondary btn-lg botones-menu" type="submit"><b>Administrar materias</b></button>
+            <br>
+            <form action="importarAlumnos.jsp">
+                <button class="btn btn-secondary btn-lg botones-menu" type="submit"><b>Administrar alumnos</b></button>
             </form>       
-            <form action="pruebaGenerarKardexJSP.jsp">
-                <button class="btn btn-secondary btn-lg btn-block botones-menu" type="submit"><b>Administrar calificaciones</b></button>
+            <form action="registrarEscuelas.jsp">
+                <button class="btn btn-secondary btn-lg btn-block botones-menu" type="submit"><b>Administrar escuelas</b></button>
             </form>      
-            <form action="inicioSesion.jsp">
-                <button class="btn btn-secondary btn-lg botones-menu" type="submit"><b>Administrar alumnos</b></button>  
+            <form action="registroUsuario.jsp">
+                <button class="btn btn-secondary btn-lg botones-menu" type="submit"><b>Administrar usuarios</b></button>  
             </form>
         </div>                    
 

@@ -18,7 +18,9 @@
                 <div class="col-lg-4 card mx-2">
                     <div class="card-body">
                         <h3 align="center">Registro de Usuario</h3>
-                        <form class="form" action="registrarUsuario" method="POST">
+                       <%-- <form class="form" action="registrarUsuario" method="POST"> 
+                       Comentarie el form porque como todavia no existe el servlet registrarUsuario para el action mandaba error,
+                       solo se ocupa descomentarear cuando ya se aplique el servlet, este form y el de abajo--%>
                             <div class="form-group">                    
                                 <div class="mb-3 row">
                                     <label class="col-sm-4 col-form-label">CURP:</label>
@@ -108,10 +110,10 @@
                                     <button class="btn btn-success">Registrar</button>
                                 </div>
                                 <div class="mb-3 row">
-                                    <button class="btn btn-danger">Cancelar</button>
+                                    <button class="btn btn-danger" onclick="history.back()">Cancelar</button>
                                 </div>
                             </div>
-                        </form>
+                        <%-- </form> --%>
                     </div>
                 </div>
                 <div class="col-lg-7 card">
