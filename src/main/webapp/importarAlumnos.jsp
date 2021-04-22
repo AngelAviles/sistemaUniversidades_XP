@@ -1,11 +1,27 @@
 <%-- Document : importarAlumnos Created on : 12/04/2021, 09:46:32 PM Author : angel --%>
 
+<%@page import="java.util.ArrayList"%>
 <%@page import="objetosNegocio.Alumno" %>
 <%@page import="java.util.List" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
-<% List lista = (List) session.getAttribute("listaAlumnos");
-    session.removeAttribute("listaAlumnos"); %>
+<%
+    List[] lista = (List[]) session.getAttribute("listaAlumnos");
+    session.removeAttribute("listaAlumnos");
+    Boolean archivoInvalido = false;
+    if ((Boolean) session.getAttribute("archivoInvalido") != null) {
+        archivoInvalido = (Boolean) session.getAttribute("archivoInvalido");
+        session.removeAttribute("archivoInvalido");
+    }
+    List<Alumno> alumnosRegistrados = new ArrayList<Alumno>();
+    List<Integer> alumnosCamposVacios = new ArrayList<Integer>();
+    List<Integer> alumnosPreexistentes = new ArrayList<Integer>();
+    if (lista != null) {
+        alumnosRegistrados = lista[0];
+        alumnosCamposVacios = lista[1];
+        alumnosPreexistentes = lista[2];
+    }
+%>
 
 <!DOCTYPE html>
 <html>
@@ -67,7 +83,7 @@
                                 </div>
                                 <div class="m-3 mt-5">
                                     <div class="d-grid gap-6 mx-auto">
-                                        <button class="btn btn-danger">Cancelar</button>
+                                        <button class="btn btn-danger" onclick="history.back()">Cancelar</button>
                                     </div>
                                 </div>
                                 <div class="m-3">
@@ -89,9 +105,9 @@
                             </thead>
                             <tbody>
 
-                                <% if (lista != null) {
-                                        for (int i = 0; i < lista.size(); i++) {
-                                            Alumno a = (Alumno) lista.get(i);
+                                <% if (!alumnosRegistrados.isEmpty()) {
+                                        for (int i = 0; i < alumnosRegistrados.size(); i++) {
+                                            Alumno a = (Alumno) alumnosRegistrados.get(i);
                                             out.print("<tr>"
                                                     + "<td scope=\"row\">" + a.getMatricula() + "</td>"
                                                     + "<td>" + a.getNombre() + "</td>"
@@ -106,15 +122,52 @@
                                                 + "<td>curp</td>"
                                                 + "</tr>");
                                     }
-
-
                                 %>
 
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>            
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosCamposVacios.isEmpty()) {
+                    out.print("hidden");
+                } %>>
+                <h4 class="alert-heading">¡Campos vacios!</h4>
+                <p>En el archivo importado, algunos alumnos contenian campos vacios. Las filas de los alumnos que no fueron registrados son: 
+                    <%
+                        if (!alumnosCamposVacios.isEmpty()) {
+                            out.print(alumnosCamposVacios.get(0));
+                            for (int i = 1; i < alumnosCamposVacios.size(); i++) {
+                                out.print(", " + alumnosCamposVacios.get(i));
+                            }
+                            out.print(".");
+                        }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosPreexistentes.isEmpty()) {
+                    out.print("hidden");
+                } %>>
+                <h4 class="alert-heading">¡Alumnos registrados!</h4>
+                <p>En el archivo importado, algunos alumnos ya estaban registrados. Las filas de los alumnos que no fueron registrados son: <%
+                    if (!alumnosPreexistentes.isEmpty()) {
+                        out.print(alumnosPreexistentes.get(0));
+                        for (int i = 1; i < alumnosPreexistentes.size(); i++) {
+                            out.print(", " + alumnosPreexistentes.get(i));
+                        }
+                        out.print(".");
+                    }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-danger alert-dismissible fade show container-fluid" role="alert" <% if (!archivoInvalido) {
+                    out.print("hidden");
+                }%>>
+                <h4 class="alert-heading">¡Archivo invalido!</h4>
+                <p>El archivo importado no es compatible. Los archivos aceptados son con la extension: .xlsx, .xls y .csv.</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
         </article>
 
 

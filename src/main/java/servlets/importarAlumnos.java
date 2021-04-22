@@ -7,7 +7,9 @@ package servlets;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import control.ControlAlumno;
 import dao.AlumnoJpaController;
+import dao.exceptions.PreexistingEntityException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -48,6 +50,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 @MultipartConfig
 public class importarAlumnos extends HttpServlet {
+
+    private ControlAlumno controlAlumno = new ControlAlumno();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -97,7 +101,8 @@ public class importarAlumnos extends HttpServlet {
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
         InputStream fileContent = filePart.getInputStream();
 
-        List alumnos = new ArrayList<Alumno>();
+        List[] alumnos = null;
+        Boolean archivoInvalido = false;
 
         switch (getFileExtension(fileName)) {
             case "xlsx":
@@ -106,19 +111,21 @@ public class importarAlumnos extends HttpServlet {
             case "xls":
                 alumnos = importarXLS(fileContent);
                 break;
-            case "csv":
-            {
+            case "csv": {
                 try {
                     alumnos = importarCSV(fileContent);
                 } catch (CsvValidationException ex) {
                     Logger.getLogger(importarAlumnos.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
                 break;
-
+            } default: {
+                archivoInvalido = true;
+            }
+            
         }
 
         session.setAttribute("listaAlumnos", alumnos);
+        session.setAttribute("archivoInvalido", archivoInvalido);
         response.sendRedirect("importarAlumnos.jsp");
 
     }
@@ -138,87 +145,113 @@ public class importarAlumnos extends HttpServlet {
         return (dotIndex == -1) ? "" : name.substring(dotIndex + 1);
     }
 
-    public static List<Alumno> importarXLSX(InputStream fileContent) throws IOException {
+    private List[] importarXLSX(InputStream fileContent) throws IOException {
         XSSFWorkbook wb = new XSSFWorkbook(fileContent);
         XSSFSheet sheet = wb.getSheetAt(0);
 
         int numFilas = sheet.getLastRowNum();
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
-        AlumnoJpaController jpa = new AlumnoJpaController(factory);
-
         List alumnos = new ArrayList<Alumno>();
+        List alumnosCamposVacios = new ArrayList<Integer>();
+        List alumnosPreexistentes = new ArrayList<Integer>();
 
         for (int a = 0; a <= numFilas; a++) {
             Row fila = sheet.getRow(a);
 
-            Alumno alumno = new Alumno(null,
-                    fila.getCell(0).getStringCellValue(),
-                    fila.getCell(1).getStringCellValue(),
-                    fila.getCell(2).getStringCellValue(),
-                    null);
-
-            jpa.create(alumno);
-
-            alumnos.add(alumno);
+            if (fila.getCell(0) == null
+                    || fila.getCell(1) == null
+                    || fila.getCell(2) == null) {
+                alumnosCamposVacios.add(new Integer(a+1));
+            } else {
+                Alumno alumno = new Alumno(null,
+                            fila.getCell(0).getStringCellValue(),
+                            fila.getCell(1).getStringCellValue(),
+                            fila.getCell(2).getStringCellValue(),
+                            null);
+                try {
+                    controlAlumno.agregarAlumno(alumno);
+                    alumnos.add(alumno);
+                } catch (PreexistingEntityException ex) {
+                    alumnosPreexistentes.add(new Integer(a+1));
+                }
+            }
         }
 
-        return alumnos;
+        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes};
     }
 
-    public static List<Alumno> importarXLS(InputStream fileContent) throws IOException {
+    private List[] importarXLS(InputStream fileContent) throws IOException {
         Workbook wb = new HSSFWorkbook(fileContent);
         Sheet sheet = wb.getSheetAt(0);
 
         int numFilas = sheet.getLastRowNum();
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
-        AlumnoJpaController jpa = new AlumnoJpaController(factory);
-
         List alumnos = new ArrayList<Alumno>();
+        List alumnosCamposVacios = new ArrayList<Integer>();
+        List alumnosPreexistentes = new ArrayList<Integer>();
 
         for (int a = 0; a <= numFilas; a++) {
             Row fila = sheet.getRow(a);
 
-            Alumno alumno = new Alumno(null,
-                    fila.getCell(0).getStringCellValue(),
-                    fila.getCell(1).getStringCellValue(),
-                    fila.getCell(2).getStringCellValue(),
-                    null);
-
-            jpa.create(alumno);
-
-            alumnos.add(alumno);
+            if (fila.getCell(0) == null
+                    || fila.getCell(1) == null
+                    || fila.getCell(2) == null) {
+                alumnosCamposVacios.add(new Integer(a+1));
+            } else {
+                Alumno alumno = new Alumno(null,
+                            fila.getCell(0).getStringCellValue(),
+                            fila.getCell(1).getStringCellValue(),
+                            fila.getCell(2).getStringCellValue(),
+                            null);
+                try {
+                    controlAlumno.agregarAlumno(alumno);
+                    alumnos.add(alumno);
+                } catch (PreexistingEntityException ex) {
+                    alumnosPreexistentes.add(new Integer(a+1));
+                }
+            }
         }
 
-        return alumnos;
+        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes};
     }
 
-    public static List<Alumno> importarCSV(InputStream fileContent) throws IOException, CsvValidationException {
+    private List[] importarCSV(InputStream fileContent) throws IOException, CsvValidationException {
         CSVReader csv = new CSVReader(new InputStreamReader(fileContent));
 
         String[] fila = null;
-        
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
-        AlumnoJpaController jpa = new AlumnoJpaController(factory);
 
         List alumnos = new ArrayList<Alumno>();
+        List alumnosCamposVacios = new ArrayList<Integer>();
+        List alumnosPreexistentes = new ArrayList<Integer>();
         
+        int a = 0; 
+
         while ((fila = csv.readNext()) != null) {
-            Alumno alumno = new Alumno(null,
+            
+            if (fila[0].isEmpty()
+                    || fila[1].isEmpty()
+                    || fila[2].isEmpty()) {
+                alumnosCamposVacios.add(new Integer(a+1));
+            } else {
+                Alumno alumno = new Alumno(null,
                     fila[0],
                     fila[1],
                     fila[2],
                     null);
-
-            jpa.create(alumno);
-
-            alumnos.add(alumno);
+                try {
+                    controlAlumno.agregarAlumno(alumno);
+                    alumnos.add(alumno);
+                } catch (PreexistingEntityException ex) {
+                    alumnosPreexistentes.add(new Integer(a+1));
+                }
+            }
+            
+            a++;
         }
 
         csv.close();
 
-        return alumnos;
+        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes};
     }
 
 }
