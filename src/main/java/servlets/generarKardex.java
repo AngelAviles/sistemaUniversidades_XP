@@ -98,12 +98,9 @@ public class generarKardex extends HttpServlet {
             exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
             exporter.exportReport();
 
-        } catch (Exception ex) {
-            
-            ex.printStackTrace();
-            
+        } catch (Exception ex) {      
+            ex.printStackTrace();         
             response.setContentType("text/html;charset=UTF-8");
-            session.setAttribute("mensaje", "No existe un alumno con esa matricula.");
             response.sendRedirect("pruebaGenerarKardexJSP.jsp");
         } 
     }

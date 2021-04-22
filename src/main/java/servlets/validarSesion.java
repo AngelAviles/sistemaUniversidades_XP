@@ -13,7 +13,7 @@ import jwt.InicioSesionJWT;
 import objetosNegocio.Usuario;
 
 public class validarSesion extends HttpServlet {
-   
+
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
     UsuarioJpaController usuarioDAO = new UsuarioJpaController(factory);
     Usuario usuarioSesion = new Usuario();
@@ -76,17 +76,18 @@ public class validarSesion extends HttpServlet {
             String contrasenia = request.getParameter("txtpass");
             try {
                 usuarioSesion = usuarioDAO.consultarUsuarioInicioSesion(usuario, contrasenia);
-                request.setAttribute("usuario", usuario);
+                String nombreCompleto = usuarioSesion.getNombre() + " " + usuarioSesion.getApellido();
+                request.setAttribute("usuario", nombreCompleto);
                 InicioSesionJWT token = new InicioSesionJWT();
-                String tokenUsuario = token.validar(usuarioSesion);
-                request.setAttribute("token", tokenUsuario);
-                request.getRequestDispatcher("pruebaGenerarKardexJSP.jsp").forward(request, response);
-            } catch (IOException | ServletException e) {
-                System.out.println("No existe el usuario" + e);
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+//                String tokenUsuario = token.validar(usuarioSesion);
+//                request.setAttribute("token", tokenUsuario);
+                request.getRequestDispatcher("menuPrincipal.jsp").forward(request, response);
+            } catch (Exception e) {
+                request.setAttribute("error", "Error al iniciar sesión, credenciales invalidas");   
+                request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
             }
         } else {
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
         }
     }
 
