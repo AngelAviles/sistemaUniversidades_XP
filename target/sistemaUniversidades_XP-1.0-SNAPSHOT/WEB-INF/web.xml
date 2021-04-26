@@ -8,6 +8,10 @@
         <servlet-name>importarAlumnos</servlet-name>
         <servlet-class>servlets.importarAlumnos</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>registrarUsuario</servlet-name>
+        <servlet-class>servlets.registrarUsuario</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>validarSesion</servlet-name>
         <url-pattern>/validarSesion</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>importarAlumnos</servlet-name>
         <url-pattern>/importarAlumnos</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>registrarUsuario</servlet-name>
+        <url-pattern>/registrarUsuario</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

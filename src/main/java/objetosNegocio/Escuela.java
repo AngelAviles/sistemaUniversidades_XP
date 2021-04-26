@@ -149,7 +149,8 @@ public class Escuela implements Serializable {
 
     @Override
     public String toString() {
-        return "objetosNegocio.Escuela[ id=" + id + " ]";
+        return "Escuela{" + "id=" + id + ", clave=" + clave + ", nombre=" + nombre + ", logotipo=" + logotipo + ", planesDeEstudio=" + planesDeEstudio + ", usuarios=" + usuarios + '}';
     }
+
     
 }

@@ -18,9 +18,8 @@
                 <div class="col-lg-4 card mx-2">
                     <div class="card-body">
                         <h3 align="center">Registro de Usuario</h3>
-                       <%-- <form class="form" action="registrarUsuario" method="POST"> 
-                       Comentarie el form porque como todavia no existe el servlet registrarUsuario para el action mandaba error,
-                       solo se ocupa descomentarear cuando ya se aplique el servlet, este form y el de abajo--%>
+                      <form class="form" action="registrarUsuario" method="POST"> 
+                       
                             <div class="form-group">                    
                                 <div class="mb-3 row">
                                     <label class="col-sm-4 col-form-label">CURP:</label>
@@ -50,29 +49,29 @@
                                     <div class="col-sm-6">  
                                         <label> Actividad: </label>
                                         <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="radioActividad" id="radioActivo">
-                                          <label class="form-check-label" for="radioActivo">
+                                          <input class="form-check-input" type="radio" name="radioActividad" id="radioActivo" value="Activo">
+                                          <label class="form-check-label" for="radioActivo" value="Activo">
                                             Activo
                                           </label>
                                         </div>
                                         <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="radioActividad" id="radioInactivo">
-                                          <label class="form-check-label" for="radioInactivo">
+                                          <input class="form-check-input" type="radio" name="radioActividad" id="radioInactivo" value="Inactivo">
+                                          <label class="form-check-label" for="radioInactivo" value="Inactivo">
                                             Inactivo
                                           </label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">  
+                                    <div class="col-sm-6" >  
                                         <label> Sexo: </label>
                                         <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="radioSexo" id="radioHombre">
-                                          <label class="form-check-label" for="radioHombre">
+                                          <input class="form-check-input" type="radio" name="radioSexo" id="radioHombre" value="Masculino">
+                                          <label class="form-check-label" for="radioHombre" value="Masculino">
                                             Masculino
                                           </label>
                                         </div>
                                         <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="radioSexo" id="radioMujer">
-                                          <label class="form-check-label" for="radioMujer">
+                                          <input class="form-check-input" type="radio" name="radioSexo" id="radioMujer" value="Femenino">
+                                          <label class="form-check-label" for="radioMujer" value="Femenino">
                                             Femenino
                                           </label>
                                         </div>
@@ -93,27 +92,29 @@
                                 <div class="mb-3 row">
                                     <label class="col-sm-4 col-form-label">Escuela de pertenencia:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-select">
-                                            <option value="Cobach">Cobach #1</option>
+                                        <select class="form-select" name="escuela">
+                                            <option value="COBACH">Cobach #1</option>
+                                            <option value="CBTis 37">CBTis 37</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
                                     <label class="col-sm-4 col-form-label">Tipo de usuario:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-select">
-                                            <option value="admin">Administrador</option>
+                                        <select class="form-select" name="tipoUsuario">
+                                            <option value="Administrador">Administrador</option>
+                                            <option value="Personal">Personal</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <button class="btn btn-success">Registrar</button>
+                                    <input type="submit" name="registrar" value="Registrar" class="btn btn-success">
                                 </div>
                                 <div class="mb-3 row">
                                     <button class="btn btn-danger" onclick="history.back()">Cancelar</button>
                                 </div>
                             </div>
-                        <%-- </form> --%>
+                         </form>
                     </div>
                 </div>
                 <div class="col-lg-7 card">
