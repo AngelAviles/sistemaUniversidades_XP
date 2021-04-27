@@ -110,9 +110,6 @@ public class registrarUsuario extends HttpServlet {
             System.out.println(escuelaConvertida);
             String tipoUsuario = request.getParameter("tipoUsuario");
 
-            System.out.println(curp + " --- " + nombre + " --- " + apellido + " --- " + fechaNacimientoConvertida + " --- " + actividadConvertida
-                    + " --- " + sexo + " --- " + usuario + " --- " + contrasenia + " --- " + escuela + " --- " + tipoUsuario);
-
             usuarioSesion = new Usuario(usuario, contrasenia, curp, nombre, apellido, fechaNacimientoConvertida, sexo, actividadConvertida, escuelaConvertida);
             usuarioDAO.create(usuarioSesion);
             request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);

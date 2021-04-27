@@ -16,10 +16,15 @@
     List<Alumno> alumnosRegistrados = new ArrayList<Alumno>();
     List<Integer> alumnosCamposVacios = new ArrayList<Integer>();
     List<Integer> alumnosPreexistentes = new ArrayList<Integer>();
+    List<Integer> alumnosCurpIncorrecta = new ArrayList<Integer>();
+    List<Integer> alumnosNombreIncorrecto = new ArrayList<Integer>();
+
     if (lista != null) {
         alumnosRegistrados = lista[0];
         alumnosCamposVacios = lista[1];
         alumnosPreexistentes = lista[2];
+        alumnosCurpIncorrecta = lista[3];
+        alumnosNombreIncorrecto = lista[4];
     }
 %>
 
@@ -167,7 +172,37 @@
                 <p>El archivo importado no es compatible. Los archivos aceptados son con la extension: .xlsx, .xls y .csv.</p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-
+                
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosCurpIncorrecta.isEmpty()) {
+                    out.print("hidden");
+                } %>>
+                <h4 class="alert-heading">¡El formato de CURP es incorrecto!</h4>
+                <p>En el archivo importado, las siguientes filas no contaban con un buen formato en su CURP: <%
+                    if (!alumnosCurpIncorrecta.isEmpty()) {
+                        out.print(alumnosCurpIncorrecta.get(0));
+                        for (int i = 1; i < alumnosCurpIncorrecta.size(); i++) {
+                            out.print(", " + alumnosCurpIncorrecta.get(i));
+                        }
+                        out.print(".");
+                    }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+                 <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosNombreIncorrecto.isEmpty()) {
+                    out.print("hidden");
+                } %>>
+                <h4 class="alert-heading">¡El formato del nombre contiene caracteres invalidos!</h4>
+                <p>En el archivo importado, las siguientes filas no contaban con un buen formato en su nombre: <%
+                    if (!alumnosNombreIncorrecto.isEmpty()) {
+                        out.print(alumnosNombreIncorrecto.get(0));
+                        for (int i = 1; i < alumnosNombreIncorrecto.size(); i++) {
+                            out.print(", " + alumnosNombreIncorrecto.get(i));
+                        }
+                        out.print(".");
+                    }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </article>
 
 

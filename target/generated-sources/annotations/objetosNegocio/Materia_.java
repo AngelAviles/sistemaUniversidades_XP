@@ -8,7 +8,7 @@ import objetosNegocio.Calificacion;
 import objetosNegocio.MateriaPlandeestudio;
 import objetosNegocio.MateriasSerializacion;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-04-26T01:35:29")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-04-26T20:35:56")
 @StaticMetamodel(Materia.class)
 public class Materia_ { 
 

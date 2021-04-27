@@ -2,10 +2,7 @@
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<%
-    List lista = (List) session.getAttribute("listaEscuelas");
-    session.removeAttribute("listaEscuelas");
-%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,6 +11,7 @@
               integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
+    
     <body>
         <article>
             <h1 class="text-center">Registrar Escuelas</h1>
@@ -46,16 +44,18 @@
                         <div class="border border-black border-3 mb-3">
                             <form action="registrarEscuelas" method="post" enctype="multipart/form-data">
                                 <div class="m-3">
-                                    <div class="d-grid gap-6 mx-auto">
-                                        <p>Clave</p>
-                                        <input type="text" name="clave">
-                                        <p>Nombre</p>
-                                        <input type="text" name="nombre">
-                                    </div>
-                                    <div class="m-3">
+                                    <p>
+                                        <label for="formFileSm" class="form-label">Clave</label>
+                                        <input id="clav" class="form-control form-control-sm" type="text" name="clave">
+                                    </p>
+                                    <p>
+                                        <label for="formFileSm" class="form-label">Nombre</label>
+                                        <input id="nom" class="form-control form-control-sm" type="text" name="nombre">
+                                    </p>
+                                    <p>
                                         <label for="formFileSm" class="form-label">Logotipo</label>
-                                        <input class="form-control form-control-sm" id="formFileSm" name="archivo" type="file" <%--accept=".png, .jpg--%> >
-                                    </div>
+                                        <input id="log" class="form-control form-control-sm" name="logotipo" type="file" accept="image/*"> 
+                                    </p>
                                     <div class="m-3">
                                         <div class="d-grid gap-6 mx-auto">
                                             <button class="btn btn-secondary" type="reset">Limpiar</button>
@@ -63,7 +63,7 @@
                                     </div>
                                     <div class="m-3">
                                         <div class="d-grid gap-6 mx-auto">
-                                            <button class="btn btn-primary" type="submit">Registrar</button>
+                                            <button id="btn_guardar" onclick="registrar()" class="btn btn-primary" type="sumit">Registrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -71,9 +71,9 @@
 
                         </div>
                     </div>
-
+                                   
                     <div class="table-responsive col-md">
-                        <table class="table table-striped border border-black border-3" id="alumnosTabla">
+                        <table class="table table-striped border border-black border-3" id="escuelasTabla">
                             <thead class="table-dark">
                                 <tr>
                                     <th scope="col">Clave</th>
@@ -81,43 +81,23 @@
                                     <th scope="col">Logotipo</th>
                                 </tr>
                             </thead>
-                            <tbody>
-
-                                <%
-                                    if (lista != null) {
-                                        for (int i = 0; i < lista.size(); i++) {
-                                            Escuela a = (Escuela) lista.get(i);
-                                            out.print("<tr>"
-                                                    + "<td scope=\"row\">" + a.getClave() + "</td>"
-                                                    + "<td>" + a.getNombre() + "</td>"
-                                                    //+ "<td>" + a.getCurp() + "</td>"
-                                                    + "<tr>"
-                                            );
-                                        }
-                                    } else {
-                                        out.print("<tr>"
-                                                + "<td scope=\"row\">1</td>"
-                                                + "<td>COBACH</td>"
-                                                + "<td></td>"
-                                                + "<tr>"
-                                        );
-                                    }
-
-
-                                %>
-
+                            <tbody id="tabla">
+                                
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
-
-
-
-
         </article>
-
-
+        <script type="text/javascript"> 
+            function registrar(){
+                var clav = document.getElementById("clav").value;
+                var nom = document.getElementById("nom").value;      
+                var fila="<tr><td>"+clav+"</td><td>"+nom+"</td><td>"+ +"</td></tr>";
+                var btn = document.createElement("TR");
+                    btn.innerHTML=fila;
+                document.getElementById("tabla").appendChild(btn);
+            }
+        </script>
     </body>
 </html>

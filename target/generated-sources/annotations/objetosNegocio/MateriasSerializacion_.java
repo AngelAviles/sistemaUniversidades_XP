@@ -5,7 +5,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import objetosNegocio.Materia;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-04-26T01:35:29")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-04-26T20:35:56")
 @StaticMetamodel(MateriasSerializacion.class)
 public class MateriasSerializacion_ { 
 
