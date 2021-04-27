@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -49,12 +50,7 @@ public class NewMain {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws UnsupportedEncodingException {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
-        UsuarioJpaController usuarioDAO = new UsuarioJpaController(factory);
-
-        InicioSesionJWT token = new InicioSesionJWT();
-        System.out.println(token.validar(usuarioDAO.consultarUsuarioInicioSesion("bryanseg", "1234")));
-
+        
 //        // Alumnos
 //        Alumno alumno1 = new Alumno(5, "0001", "hola", "fsfsdfsf", new ArrayList<Calificacion>());
 //        Alumno alumno2 = new Alumno(6, "0002", "hola", "dvvvdvdvdv", new ArrayList<Calificacion>());

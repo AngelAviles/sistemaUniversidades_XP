@@ -7,7 +7,7 @@
         <title>Menú Principal</title>
         <link href="estilos/estiloLogin.css" rel="stylesheet" type="text/css"/>
     </head>
-
+ 
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">

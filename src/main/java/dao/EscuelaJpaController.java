@@ -254,4 +254,12 @@ public class EscuelaJpaController implements Serializable {
         }
     }
     
+        public Escuela consultarEscuelaNombre(String nombre) {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM Escuela c WHERE c.nombre = :nombre");
+        consulta.setParameter("nombre", nombre);
+        Escuela escuela = (Escuela) consulta.getSingleResult();
+        return escuela;
+    }
+    
 }

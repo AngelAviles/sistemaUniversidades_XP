@@ -124,9 +124,6 @@ public class Escuela implements Serializable {
         this.usuarios = usuarios;
     }
     
-    
-    
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -149,7 +146,8 @@ public class Escuela implements Serializable {
 
     @Override
     public String toString() {
-        return "objetosNegocio.Escuela[ id=" + id + " ]";
+        return this.nombre;
     }
+
     
 }
