@@ -35,10 +35,10 @@ public class InicioSesionJWT {
 
         if (usuario != null) {
             long tiempo = System.currentTimeMillis();
-            String jwt = Jwts.builder()               
+            String jwt = Jwts.builder()
                     .setSubject("SistemasUniversidades")
-                    .setId(usuario.getId()+"")
-//                   .setIssuedAt(new Date(tiempo))
+                    .setId(usuario.getId() + "")
+                    .setIssuedAt(new Date(tiempo))
                     .setExpiration(new Date(tiempo + 900000))
                     .claim("nombre", usuario.getNombre())
                     .claim("apellido", usuario.getApellido())
@@ -53,7 +53,7 @@ public class InicioSesionJWT {
             System.out.println("------------>" + claims);
 //                JsonObject json = Json.createObjectBuilder().add("JWT", jwt).build();                        
 //                Response respuesta = Response.status(Response.Status.CREATED).entity(json).build();
-                return jwt;
+            return jwt;
         }
         return null;
     }
