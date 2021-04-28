@@ -1,16 +1,28 @@
+<%@page import="jwt.JWT"%>
 <%@page import="objetosNegocio.Materia"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
 <%
-    List<Materia> lista = (List) session.getAttribute("listaMaterias");
-    session.removeAttribute("listaMaterias");
-
+    response.setHeader("Cache-Control", "no-cache");
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+    
     List<Materia> materiasRegistrados = new ArrayList<Materia>();
+    
+    if (JWT.validarJWT(request, response)) {
+        List<Materia> lista = (List) session.getAttribute("listaMaterias");
+        session.removeAttribute("listaMaterias");
 
-    if (lista != null) {
-        materiasRegistrados = lista;
+        if (lista != null) {
+            materiasRegistrados = lista;
+        }
+    } else {
+        session = request.getSession();
+        session.removeAttribute("token");
+        response.sendRedirect("inicioSesion.jsp");
     }
 %>
 
@@ -25,6 +37,7 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.24/datatables.min.css"/>
         <link href="estilos/estilos.css" rel="stylesheet" type="text/css"/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     </head>
 
     <body>
