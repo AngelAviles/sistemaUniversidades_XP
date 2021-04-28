@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -81,6 +82,21 @@ public class registrarUsuario extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        String accion = request.getParameter("registrar");
+        if (accion != null) {
+            String curp = request.getParameter("txtCurp");
+            String nombre = request.getParameter("txtNombre");
+            String apellido = request.getParameter("txtapellidos");
+            String fechaNacimiento = request.getParameter("fecha");
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+            Date fechaNacimientoConvertida = null;
+            try {
+                fechaNacimientoConvertida = formatoFecha.parse(fechaNacimiento);
+            } catch (ParseException ex) {
+                System.out.println(ex);
+            }
+
+
         String curp = request.getParameter("txtCurp");
         String nombre = request.getParameter("txtNombre");
         String apellido = request.getParameter("txtapellidos");
@@ -116,6 +132,31 @@ public class registrarUsuario extends HttpServlet {
         usuarioDAO.create(usuarioSesion);
         //request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
         response.sendRedirect("registroUsuario.jsp");
+
+
+            try {
+                Usuario comparar = usuarioDAO.consultarUsuarioCURP(curp);
+                request.setAttribute("siErrorUsuario", "¡Ya existe un usuario registrado con la misma CURP!");
+                request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+            } catch (NoResultException ex) {
+                try {
+                    Usuario compararDos = usuarioDAO.consultarUsuarioUser(usuario);
+                    request.setAttribute("siErrorUsuario", "¡Ya existe un usuario registrado con el mismo nombre de usuario!");
+                    request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+                } catch (NoResultException exDos) {
+//                    try {
+                        usuarioSesion = new Usuario(usuario, contrasenia, curp, nombre, apellido, fechaNacimientoConvertida, sexo, actividadConvertida, escuelaConvertida);
+                        usuarioDAO.create(usuarioSesion);
+                        request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+//                    } catch (Exception exTres) {
+//                        request.setAttribute("siErrorUsuario", "siErrorUsuario");
+//                        request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+//                    }
+                }
+            }
+        } else {
+            request.getRequestDispatcher("menuPrincipal.jsp").forward(request, response);
+        }
 
     }
 

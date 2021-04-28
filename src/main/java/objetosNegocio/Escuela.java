@@ -57,12 +57,23 @@ public class Escuela implements Serializable {
         this.usuarios.add(usuario);
     }
 
-    
-    
-    
     public Escuela() {
     }
 
+    public Escuela(String clave, String nombre, byte[] logotipo) {
+        this.clave = clave;
+        this.nombre = nombre;
+        this.logotipo = logotipo;
+    }
+    
+    public Escuela(String clave, String nombre, byte[] logotipo, List<EscuelaPlandeestudio> planesDeEstudio, List<Usuario> usuarios) {
+        this.clave = clave;
+        this.nombre = nombre;
+        this.logotipo = logotipo;
+        this.planesDeEstudio = planesDeEstudio;
+        this.usuarios = usuarios;
+    }
+    
     public Escuela(Integer id, String clave, String nombre, byte[] logotipo, List<EscuelaPlandeestudio> planesDeEstudio, List<Usuario> usuarios) {
         this.id = id;
         this.clave = clave;
@@ -71,10 +82,6 @@ public class Escuela implements Serializable {
         this.planesDeEstudio = planesDeEstudio;
         this.usuarios = usuarios;
     }
-    
-    
-    
-    
 
     public Integer getId() {
         return id;

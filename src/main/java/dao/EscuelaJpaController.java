@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import objetosNegocio.Escuela;
 import objetosNegocio.Usuario;
 
@@ -254,7 +255,7 @@ public class EscuelaJpaController implements Serializable {
         }
     }
     
-        public Escuela consultarEscuelaNombre(String nombre) {
+        public Escuela consultarEscuelaNombre(String nombre) throws NoResultException {
         EntityManager em = getEntityManager();
         Query consulta = em.createQuery("SELECT c FROM Escuela c WHERE c.nombre = :nombre");
         consulta.setParameter("nombre", nombre);
