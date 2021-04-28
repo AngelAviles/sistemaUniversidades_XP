@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import objetosNegocio.Escuela;
@@ -165,6 +166,22 @@ public class UsuarioJpaController implements Serializable {
         Query consulta = em.createQuery("SELECT c FROM Usuario c WHERE c.user = :user AND c.password = :password");
         consulta.setParameter("user", user);
         consulta.setParameter("password", password);
+        Usuario usuario = (Usuario) consulta.getSingleResult();
+        return usuario;
+    }
+
+    public Usuario consultarUsuarioCURP(String CURP) throws NoResultException {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM Usuario c WHERE c.curp = :curp");
+        consulta.setParameter("curp", CURP);
+        Usuario usuario = (Usuario) consulta.getSingleResult();
+        return usuario;
+    }
+    
+    public Usuario consultarUsuarioUser(String user) throws NoResultException {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM Usuario c WHERE c.user = :user");
+        consulta.setParameter("user", user);
         Usuario usuario = (Usuario) consulta.getSingleResult();
         return usuario;
     }

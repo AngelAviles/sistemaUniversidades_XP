@@ -119,10 +119,11 @@ public class importarAlumnos extends HttpServlet {
                     Logger.getLogger(importarAlumnos.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
-            } default: {
+            }
+            default: {
                 archivoInvalido = true;
             }
-            
+
         }
 
         session.setAttribute("listaAlumnos", alumnos);
@@ -146,7 +147,7 @@ public class importarAlumnos extends HttpServlet {
         return (dotIndex == -1) ? "" : name.substring(dotIndex + 1);
     }
 
-private List[] importarXLSX(InputStream fileContent) throws IOException {
+    private List[] importarXLSX(InputStream fileContent) throws IOException {
         XSSFWorkbook wb = new XSSFWorkbook(fileContent);
         XSSFSheet sheet = wb.getSheetAt(0);
 
@@ -157,6 +158,7 @@ private List[] importarXLSX(InputStream fileContent) throws IOException {
         List alumnosPreexistentes = new ArrayList<Integer>();
         List alumnosCurpIncorrecta = new ArrayList<Integer>();
         List alumnosNombreIncorrecto = new ArrayList<Integer>();
+        List alumnosMatriculaIncorrecta = new ArrayList<Integer>();
 
         for (int a = 0; a <= numFilas; a++) {
             Row fila = sheet.getRow(a);
@@ -168,16 +170,20 @@ private List[] importarXLSX(InputStream fileContent) throws IOException {
             } else {
                 if (validarCURP(fila.getCell(2).getStringCellValue())) {
                     if (validarNombre(fila.getCell(1).getStringCellValue())) {
-                        Alumno alumno = new Alumno(null,
-                                fila.getCell(0).getStringCellValue(),
-                                fila.getCell(1).getStringCellValue(),
-                                fila.getCell(2).getStringCellValue(),
-                                null);
-                        try {
-                            controlAlumno.agregarAlumno(alumno);
-                            alumnos.add(alumno);
-                        } catch (PreexistingEntityException ex) {
-                            alumnosPreexistentes.add(new Integer(a + 1));
+                        if (validarMatricula(fila.getCell(0).getStringCellValue())) {
+                            Alumno alumno = new Alumno(null,
+                                    fila.getCell(0).getStringCellValue(),
+                                    fila.getCell(1).getStringCellValue(),
+                                    fila.getCell(2).getStringCellValue(),
+                                    null);
+                            try {
+                                controlAlumno.agregarAlumno(alumno);
+                                alumnos.add(alumno);
+                            } catch (PreexistingEntityException ex) {
+                                alumnosPreexistentes.add(new Integer(a + 1));
+                            }
+                        } else {
+                            alumnosMatriculaIncorrecta.add(new Integer(a + 1));
                         }
                     } else {
                         alumnosNombreIncorrecto.add(new Integer(a + 1));
@@ -189,7 +195,7 @@ private List[] importarXLSX(InputStream fileContent) throws IOException {
             }
         }
 
-        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto};
+        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
     }
 
     private List[] importarXLS(InputStream fileContent) throws IOException {
@@ -203,6 +209,7 @@ private List[] importarXLSX(InputStream fileContent) throws IOException {
         List alumnosPreexistentes = new ArrayList<Integer>();
         List alumnosCurpIncorrecta = new ArrayList<Integer>();
         List alumnosNombreIncorrecto = new ArrayList<Integer>();
+        List alumnosMatriculaIncorrecta = new ArrayList<Integer>();
 
         for (int a = 0; a <= numFilas; a++) {
             Row fila = sheet.getRow(a);
@@ -214,16 +221,20 @@ private List[] importarXLSX(InputStream fileContent) throws IOException {
             } else {
                 if (validarCURP(fila.getCell(2).getStringCellValue())) {
                     if (validarNombre(fila.getCell(1).getStringCellValue())) {
-                        Alumno alumno = new Alumno(null,
-                                fila.getCell(0).getStringCellValue(),
-                                fila.getCell(1).getStringCellValue(),
-                                fila.getCell(2).getStringCellValue(),
-                                null);
-                        try {
-                            controlAlumno.agregarAlumno(alumno);
-                            alumnos.add(alumno);
-                        } catch (PreexistingEntityException ex) {
-                            alumnosPreexistentes.add(new Integer(a + 1));
+                        if (validarMatricula(fila.getCell(0).getStringCellValue())) {
+                            Alumno alumno = new Alumno(null,
+                                    fila.getCell(0).getStringCellValue(),
+                                    fila.getCell(1).getStringCellValue(),
+                                    fila.getCell(2).getStringCellValue(),
+                                    null);
+                            try {
+                                controlAlumno.agregarAlumno(alumno);
+                                alumnos.add(alumno);
+                            } catch (PreexistingEntityException ex) {
+                                alumnosPreexistentes.add(new Integer(a + 1));
+                            }
+                        } else {
+                            alumnosMatriculaIncorrecta.add(new Integer(a + 1));
                         }
                     } else {
                         alumnosNombreIncorrecto.add(new Integer(a + 1));
@@ -236,7 +247,7 @@ private List[] importarXLSX(InputStream fileContent) throws IOException {
 
         }
 
-        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto};
+        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
     }
 
     private List[] importarCSV(InputStream fileContent) throws IOException, CsvValidationException {
@@ -249,6 +260,7 @@ private List[] importarXLSX(InputStream fileContent) throws IOException {
         List alumnosPreexistentes = new ArrayList<Integer>();
         List alumnosCurpIncorrecta = new ArrayList<Integer>();
         List alumnosNombreIncorrecto = new ArrayList<Integer>();
+        List alumnosMatriculaIncorrecta = new ArrayList<Integer>();
 
         int contador = 0;
 
@@ -261,16 +273,20 @@ private List[] importarXLSX(InputStream fileContent) throws IOException {
             } else {
                 if (validarCURP(fila[2])) {
                     if (validarNombre(fila[1])) {
-                        Alumno alumno = new Alumno(null,
-                                fila[0],
-                                fila[1],
-                                fila[2],
-                                null);
-                        try {
-                            controlAlumno.agregarAlumno(alumno);
-                            alumnos.add(alumno);
-                        } catch (PreexistingEntityException ex) {
-                            alumnosPreexistentes.add(new Integer(contador + 1));
+                        if (validarMatricula(fila[0])) {
+                            Alumno alumno = new Alumno(null,
+                                    fila[0],
+                                    fila[1],
+                                    fila[2],
+                                    null);
+                            try {
+                                controlAlumno.agregarAlumno(alumno);
+                                alumnos.add(alumno);
+                            } catch (PreexistingEntityException ex) {
+                                alumnosPreexistentes.add(new Integer(contador + 1));
+                            }
+                        } else {
+                            alumnosMatriculaIncorrecta.add(new Integer(contador + 1));
                         }
                     } else {
                         alumnosNombreIncorrecto.add(new Integer(contador + 1));
@@ -287,7 +303,7 @@ private List[] importarXLSX(InputStream fileContent) throws IOException {
 
         csv.close();
 
-        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto};
+        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
     }
 
     public boolean validarCURP(String curp) {
@@ -305,6 +321,10 @@ private List[] importarXLSX(InputStream fileContent) throws IOException {
 
     public boolean validarNombre(String str) {
         return str.matches("^\\p{L}+[\\p{L}\\p{Z}\\p{P}]{0,}");
+    }
+
+    public boolean validarMatricula(String str) {
+        return str.matches("^([0-9])*$");
     }
 
 }

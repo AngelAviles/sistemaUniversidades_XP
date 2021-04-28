@@ -18,6 +18,7 @@
     List<Integer> alumnosPreexistentes = new ArrayList<Integer>();
     List<Integer> alumnosCurpIncorrecta = new ArrayList<Integer>();
     List<Integer> alumnosNombreIncorrecto = new ArrayList<Integer>();
+    List<Integer> alumnosMatriculaIncorrecta = new ArrayList<Integer>();
 
     if (lista != null) {
         alumnosRegistrados = lista[0];
@@ -25,6 +26,7 @@
         alumnosPreexistentes = lista[2];
         alumnosCurpIncorrecta = lista[3];
         alumnosNombreIncorrecto = lista[4];
+        alumnosMatriculaIncorrecta = lista[5];
     }
 %>
 
@@ -45,25 +47,7 @@
             <h1 class="text-center">Importar Alumnos</h1>
 
             <hr />
-            <nav>
-                <ul class="nav justify-content-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Escuelas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Capturistas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Alumnos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Calificaciones</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Kardex</a>
-                    </li>
-                </ul>
-            </nav>
+
             <hr />
 
             <div class="container-fluid">
@@ -86,16 +70,19 @@
                                         <button class="btn btn-secondary" type="reset">Eliminar</button>
                                     </div>
                                 </div>
+
                                 <div class="m-3 mt-5">
-                                    <div class="d-grid gap-6 mx-auto">
-                                        <button class="btn btn-danger" onclick="history.back()">Cancelar</button>
-                                    </div>
-                                </div>
-                                <div class="m-3">
                                     <div class="d-grid gap-6 mx-auto">
                                         <button class="btn btn-primary" type="submit">Importar</button>
                                     </div>
                                 </div>
+
+                                <div class="m-3">
+                                    <div class="d-grid gap-6 mx-auto">
+                                        <button class="btn btn-danger" onclick="history.back()">Cancelar</button>
+                                    </div>
+                                </div>
+
                             </form>
                         </div>
                     </div>
@@ -172,7 +159,7 @@
                 <p>El archivo importado no es compatible. Los archivos aceptados son con la extension: .xlsx, .xls y .csv.</p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-                
+
             <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosCurpIncorrecta.isEmpty()) {
                     out.print("hidden");
                 } %>>
@@ -188,7 +175,7 @@
                     %></p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-                 <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosNombreIncorrecto.isEmpty()) {
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosNombreIncorrecto.isEmpty()) {
                     out.print("hidden");
                 } %>>
                 <h4 class="alert-heading">¡El formato del nombre contiene caracteres invalidos!</h4>
@@ -203,6 +190,23 @@
                     %></p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+                
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosMatriculaIncorrecta.isEmpty()) {
+                                    out.print("hidden");
+                                } %>>
+                <h4 class="alert-heading">¡El formato de la matricula contiene letras o caracteres invalidos!</h4>
+                <p>En el archivo importado, las siguientes filas no contaban con un buen formato en su matricula: <%
+                    if (!alumnosMatriculaIncorrecta.isEmpty()) {
+                        out.print(alumnosMatriculaIncorrecta.get(0));
+                        for (int i = 1; i < alumnosMatriculaIncorrecta.size(); i++) {
+                            out.print(", " + alumnosMatriculaIncorrecta.get(i));
+                        }
+                        out.print(".");
+                    }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+                
         </article>
 
 

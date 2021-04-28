@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -87,7 +88,6 @@ public class registrarUsuario extends HttpServlet {
             Date fechaNacimientoConvertida = null;
             try {
                 fechaNacimientoConvertida = formatoFecha.parse(fechaNacimiento);
-                System.out.println(fechaNacimientoConvertida);
             } catch (ParseException ex) {
                 System.out.println(ex);
             }
@@ -110,9 +110,26 @@ public class registrarUsuario extends HttpServlet {
             System.out.println(escuelaConvertida);
             String tipoUsuario = request.getParameter("tipoUsuario");
 
-            usuarioSesion = new Usuario(usuario, contrasenia, curp, nombre, apellido, fechaNacimientoConvertida, sexo, actividadConvertida, escuelaConvertida);
-            usuarioDAO.create(usuarioSesion);
-            request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+            try {
+                Usuario comparar = usuarioDAO.consultarUsuarioCURP(curp);
+                request.setAttribute("siErrorUsuario", "¡Ya existe un usuario registrado con la misma CURP!");
+                request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+            } catch (NoResultException ex) {
+                try {
+                    Usuario compararDos = usuarioDAO.consultarUsuarioUser(usuario);
+                    request.setAttribute("siErrorUsuario", "¡Ya existe un usuario registrado con el mismo nombre de usuario!");
+                    request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+                } catch (NoResultException exDos) {
+//                    try {
+                        usuarioSesion = new Usuario(usuario, contrasenia, curp, nombre, apellido, fechaNacimientoConvertida, sexo, actividadConvertida, escuelaConvertida);
+                        usuarioDAO.create(usuarioSesion);
+                        request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+//                    } catch (Exception exTres) {
+//                        request.setAttribute("siErrorUsuario", "siErrorUsuario");
+//                        request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+//                    }
+                }
+            }
         } else {
             request.getRequestDispatcher("menuPrincipal.jsp").forward(request, response);
         }

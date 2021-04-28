@@ -7,12 +7,15 @@ package com.mycompany.sistemaUniversidades_XP;
 
 import dao.AlumnoJpaController;
 import dao.CalificacionJpaController;
+import dao.EscuelaJpaController;
 import dao.MateriaJpaController;
 import dao.UsuarioJpaController;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -36,9 +39,13 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import objetosNegocio.Alumno;
 import objetosNegocio.Calificacion;
+import objetosNegocio.Escuela;
 import objetosNegocio.Materia;
 import objetosNegocio.MateriaPlandeestudio;
 import objetosNegocio.MateriasSerializacion;
+import objetosNegocio.Escuela;
+import dao.EscuelaJpaController;
+import java.io.IOException;
 
 /**
  *
@@ -50,7 +57,32 @@ public class NewMain {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws UnsupportedEncodingException {
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
+        EscuelaJpaController escuelaDAO = new EscuelaJpaController(factory);
+//
+//        Escuela escuelaPrueba = escuelaDAO.consultarEscuelaNombre("Conalep");
+//        byte[] logotipoNuevo = escuelaPrueba.getLogotipo();
+//        
+//        System.out.println(logotipoNuevo);
         
+        String clave = "14565";
+        String nombre = "Conalep";
+        File fi = new File("F:/Descargas/logoCobach.jpg");
+        
+        
+        System.out.println(fi.getAbsolutePath());
+        
+        
+//        byte[] logotipoConvertido;
+//        try {
+//            logotipoConvertido = Files.readAllBytes(fi.toPath());
+//            Escuela escuelaNueva = new Escuela(clave, nombre, logotipoConvertido);
+//            escuelaDAO.create(escuelaNueva);
+//        } catch (IOException ex) {
+//            System.out.println("hubo error");
+//        }
+
 //        // Alumnos
 //        Alumno alumno1 = new Alumno(5, "0001", "hola", "fsfsdfsf", new ArrayList<Calificacion>());
 //        Alumno alumno2 = new Alumno(6, "0002", "hola", "dvvvdvdvdv", new ArrayList<Calificacion>());
