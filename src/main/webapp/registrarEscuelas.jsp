@@ -2,15 +2,32 @@
 <%@page import="dao.EscuelaJpaController"%>
 <%@page import="javax.persistence.Persistence"%>
 <%@page import="javax.persistence.EntityManagerFactory"%>
+<%@page import="jwt.JWT"%>
 <%@page import="objetosNegocio.Escuela"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
+
+    response.setHeader("Cache-Control", "no-cache");
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
     EscuelaJpaController escuelaDAO = new EscuelaJpaController(factory);
     List<Escuela> listaEscuelas = escuelaDAO.findEscuelaEntities();
+
+    if (JWT.validarJWT(request, response)) {
+
+    } else {
+        session = request.getSession();
+        session.removeAttribute("token");
+        response.sendRedirect("inicioSesion.jsp");
+        //request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
+    }
 %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,6 +36,7 @@
               integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.24/datatables.min.css"/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     </head>
 
     <body>
@@ -42,9 +60,10 @@
                 <div class="row align-items-center justify-content-center">
                     <div class="col-auto">
                         <div class="border border-black border-3 mb-3">
-
+                          
                             <form action="registrarEscuelas" method="POST" class="form" enctype="multipart/form-data">
                                 <div class="m-3" class="form-group">
+
                                     <p>
                                         <label class="form-label">Clave</label>
                                         <input class="form-control form-control-sm" type="text" name="clave" required="">
@@ -64,6 +83,7 @@
                                     </div>
                                     <div class="m-3">
                                         <div class="d-grid gap-6 mx-auto">
+
                                             <button id="btn_guardar" class="btn btn-primary" type="sumit" name="registrarEscuela" value="RegistrarEscuela">Registrar</button>
                                         </div>
                                     </div>

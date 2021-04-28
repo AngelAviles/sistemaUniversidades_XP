@@ -13,12 +13,15 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import jwt.JWT;
 import objetosNegocio.Usuario;
 import objetosNegocio.Escuela;
 
+@WebServlet(name = "registrarUsuario", urlPatterns = {"/registrarUsuario"})
 public class registrarUsuario extends HttpServlet {
 
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
@@ -78,6 +81,7 @@ public class registrarUsuario extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String accion = request.getParameter("registrar");
         if (accion != null) {
             String curp = request.getParameter("txtCurp");
@@ -92,23 +96,43 @@ public class registrarUsuario extends HttpServlet {
                 System.out.println(ex);
             }
 
-            String actividad = request.getParameter("radioActividad");
-            Boolean actividadConvertida;
-            if (actividad.equalsIgnoreCase("Activo")) {
-                actividadConvertida = true;
-            } else {
-                actividadConvertida = false;
-            }
 
-            String sexo = request.getParameter("radioSexo");
-            String usuario = request.getParameter("txtUsuario");
-            String contrasenia = request.getParameter("txtPassword");
+        String curp = request.getParameter("txtCurp");
+        String nombre = request.getParameter("txtNombre");
+        String apellido = request.getParameter("txtapellidos");
+        String fechaNacimiento = request.getParameter("fecha");
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+        Date fechaNacimientoConvertida = null;
+        try {
+            fechaNacimientoConvertida = formatoFecha.parse(fechaNacimiento);
+            System.out.println(fechaNacimientoConvertida);
+        } catch (ParseException ex) {
+            System.out.println(ex);
+        }
 
-            String escuela = request.getParameter("escuela");
-            Escuela escuelaConvertida = escuelaDAO.consultarEscuelaNombre(escuela);
+        String actividad = request.getParameter("radioActividad");
+        Boolean actividadConvertida;
+        if (actividad.equalsIgnoreCase("Activo")) {
+            actividadConvertida = true;
+        } else {
+            actividadConvertida = false;
+        }
 
-            System.out.println(escuelaConvertida);
-            String tipoUsuario = request.getParameter("tipoUsuario");
+        String sexo = request.getParameter("radioSexo");
+        String usuario = request.getParameter("txtUsuario");
+        String contrasenia = request.getParameter("txtPassword");
+
+        String escuela = request.getParameter("escuela");
+        Escuela escuelaConvertida = escuelaDAO.consultarEscuelaNombre(escuela);
+
+        System.out.println(escuelaConvertida);
+        String tipoUsuario = request.getParameter("tipoUsuario");
+
+        usuarioSesion = new Usuario(usuario, contrasenia, curp, nombre, apellido, fechaNacimientoConvertida, sexo, actividadConvertida, escuelaConvertida);
+        usuarioDAO.create(usuarioSesion);
+        //request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+        response.sendRedirect("registroUsuario.jsp");
+
 
             try {
                 Usuario comparar = usuarioDAO.consultarUsuarioCURP(curp);
@@ -133,6 +157,7 @@ public class registrarUsuario extends HttpServlet {
         } else {
             request.getRequestDispatcher("menuPrincipal.jsp").forward(request, response);
         }
+
     }
 
     /**
