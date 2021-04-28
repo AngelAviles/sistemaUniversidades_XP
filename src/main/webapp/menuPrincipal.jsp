@@ -1,4 +1,22 @@
+<%@page import="jwt.JWT"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%
+    response.setHeader("Cache-Control", "no-cache");
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+
+    if (JWT.validarJWT(request, response)) {
+
+    } else {
+        session = request.getSession();
+        session.removeAttribute("token");
+        response.sendRedirect("inicioSesion.jsp");
+        //request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
+    }
+%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,8 +24,9 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
         <title>Menú Principal</title>
         <link href="estilos/estiloLogin.css" rel="stylesheet" type="text/css"/>
+        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     </head>
- 
+
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
@@ -23,7 +42,7 @@
                         </li>   
                     </ul>
                 </div>
-                <form action="validarSesion" method="POST">
+                <form action="ControlServlet" method="POST">
                     <button name="accion" value="Salir" type="submit">
                         Cerrar sesión 
                         <img src="img/logout.png" alt="logout" width="30" height="30" class="icono-logout"/>
@@ -39,14 +58,14 @@
             <br><br>
             <h3>Sistema para captura y administración de calificaciones</h3>
             <br>
-            <form action="importarAlumnos.jsp">
-                <button class="btn btn-secondary btn-lg botones-menu" type="submit"><b>Administrar alumnos</b></button>
+            <form action="ControlServlet" method="POST">
+                <button class="btn btn-secondary btn-lg botones-menu" type="submit" name="accion" value="administrarAlumnos"><b>Administrar alumnos</b></button>
             </form>       
-            <form action="registrarEscuelas.jsp">
-                <button class="btn btn-secondary btn-lg btn-block botones-menu" type="submit"><b>Administrar escuelas</b></button>
+            <form action="ControlServlet" method="POST">
+                <button class="btn btn-secondary btn-lg btn-block botones-menu" type="submit" name="accion" value="administrarEscuelas"><b>Administrar escuelas</b></button>
             </form>      
-            <form action="registroUsuario.jsp">
-                <button class="btn btn-secondary btn-lg botones-menu" type="submit"><b>Administrar usuarios</b></button>  
+            <form action="ControlServlet" method="POST">
+                <button class="btn btn-secondary btn-lg botones-menu" type="submit" name="accion" value="administrarUsuarios"><b>Administrar usuarios</b></button>  
             </form>
         </div>                    
 

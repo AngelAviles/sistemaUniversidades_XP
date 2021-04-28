@@ -1,30 +1,46 @@
 <%-- Document : importarAlumnos Created on : 12/04/2021, 09:46:32 PM Author : angel --%>
 
+<%@page import="jwt.JWT"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="objetosNegocio.Alumno" %>
 <%@page import="java.util.List" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
 <%
-    List[] lista = (List[]) session.getAttribute("listaAlumnos");
-    session.removeAttribute("listaAlumnos");
-    Boolean archivoInvalido = false;
-    if ((Boolean) session.getAttribute("archivoInvalido") != null) {
-        archivoInvalido = (Boolean) session.getAttribute("archivoInvalido");
-        session.removeAttribute("archivoInvalido");
-    }
+    response.setHeader("Cache-Control", "no-cache");
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+    
     List<Alumno> alumnosRegistrados = new ArrayList<Alumno>();
     List<Integer> alumnosCamposVacios = new ArrayList<Integer>();
     List<Integer> alumnosPreexistentes = new ArrayList<Integer>();
     List<Integer> alumnosCurpIncorrecta = new ArrayList<Integer>();
     List<Integer> alumnosNombreIncorrecto = new ArrayList<Integer>();
+    
+    Boolean archivoInvalido = false;
 
-    if (lista != null) {
-        alumnosRegistrados = lista[0];
-        alumnosCamposVacios = lista[1];
-        alumnosPreexistentes = lista[2];
-        alumnosCurpIncorrecta = lista[3];
-        alumnosNombreIncorrecto = lista[4];
+    if (JWT.validarJWT(request, response)) {
+        
+        List[] lista = (List[]) session.getAttribute("listaAlumnos");
+        session.removeAttribute("listaAlumnos");
+        
+        if ((Boolean) session.getAttribute("archivoInvalido") != null) {
+            archivoInvalido = (Boolean) session.getAttribute("archivoInvalido");
+            session.removeAttribute("archivoInvalido");
+        }
+
+        if (lista != null) {
+            alumnosRegistrados = lista[0];
+            alumnosCamposVacios = lista[1];
+            alumnosPreexistentes = lista[2];
+            alumnosCurpIncorrecta = lista[3];
+            alumnosNombreIncorrecto = lista[4];
+        }
+    } else {
+        session = request.getSession();
+        session.removeAttribute("token");
+        response.sendRedirect("inicioSesion.jsp");
     }
 %>
 
@@ -32,6 +48,7 @@
 <html>
 
     <head>
+        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
         <title>Importar Alumnos</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
@@ -88,15 +105,15 @@
                                 </div>
                                 <div class="m-3 mt-5">
                                     <div class="d-grid gap-6 mx-auto">
-                                        <button class="btn btn-danger" onclick="history.back()">Cancelar</button>
-                                    </div>
-                                </div>
-                                <div class="m-3">
-                                    <div class="d-grid gap-6 mx-auto">
-                                        <button class="btn btn-primary" type="submit">Importar</button>
+                                        <button class="btn btn-primary" type="submit" name="accion" value="importarAlumnos">Importar</button>
                                     </div>
                                 </div>
                             </form>
+                            <div class="m-3">
+                                <div class="d-grid gap-6 mx-auto">
+                                    <button class="btn btn-danger" onclick="location.href='menuPrincipal.jsp'">Cancelar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive col-md">
@@ -151,7 +168,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosPreexistentes.isEmpty()) {
-                    out.print("hidden");
+                        out.print("hidden");
                 } %>>
                 <h4 class="alert-heading">¡Alumnos registrados!</h4>
                 <p>En el archivo importado, algunos alumnos ya estaban registrados. Las filas de los alumnos que no fueron registrados son: <%
@@ -172,7 +189,7 @@
                 <p>El archivo importado no es compatible. Los archivos aceptados son con la extension: .xlsx, .xls y .csv.</p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-                
+
             <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosCurpIncorrecta.isEmpty()) {
                     out.print("hidden");
                 } %>>

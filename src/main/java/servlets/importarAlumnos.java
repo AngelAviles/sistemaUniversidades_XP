@@ -29,6 +29,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +51,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author angel
  */
 @MultipartConfig
+@WebServlet(name = "importarAlumnos", urlPatterns = {"/importarAlumnos"})
 public class importarAlumnos extends HttpServlet {
 
     private ControlAlumno controlAlumno = new ControlAlumno();
@@ -66,7 +68,7 @@ public class importarAlumnos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -95,7 +97,7 @@ public class importarAlumnos extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+       
         HttpSession session = request.getSession();
 
         Part filePart = request.getPart("archivo"); // Retrieves <input type="file" name="archivo">
@@ -128,7 +130,8 @@ public class importarAlumnos extends HttpServlet {
         session.setAttribute("listaAlumnos", alumnos);
         session.setAttribute("archivoInvalido", archivoInvalido);
         response.sendRedirect("importarAlumnos.jsp");
-
+        //request.getRequestDispatcher("importarAlumnos.jsp").forward(request, response);
+        
     }
 
     /**

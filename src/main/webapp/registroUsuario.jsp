@@ -5,6 +5,8 @@
 --%>
 
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="jwt.JWT"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page import="java.util.List"%>
@@ -17,12 +19,27 @@
 <%@page import="objetosNegocio.Escuela"%>
 
 <%
-    EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
-    UsuarioJpaController usuarioDAO = new UsuarioJpaController(factory);
-    List<Usuario> listaUsuarios = usuarioDAO.findUsuarioEntities();
-    request.setAttribute("listaUsuarios", listaUsuarios);
-    EscuelaJpaController escuelaDAO = new EscuelaJpaController(factory);
-    List<Escuela> listaEscuelas = escuelaDAO.findEscuelaEntities();
+    response.setHeader("Cache-Control", "no-cache");
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+    
+    List<Usuario> listaUsuarios = new ArrayList<>();
+    List<Escuela> listaEscuelas = new ArrayList<>();
+
+    if (JWT.validarJWT(request, response)) {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
+        UsuarioJpaController usuarioDAO = new UsuarioJpaController(factory);
+        listaUsuarios = usuarioDAO.findUsuarioEntities();
+        request.setAttribute("listaUsuarios", listaUsuarios);
+        EscuelaJpaController escuelaDAO = new EscuelaJpaController(factory);
+        listaEscuelas = escuelaDAO.findEscuelaEntities();
+    } else {
+        session = request.getSession();
+        session.removeAttribute("token");
+        response.sendRedirect("inicioSesion.jsp");
+        //request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
+    }
 %>
 
 <!DOCTYPE html>
@@ -31,6 +48,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
         <title>Administrar usuarios</title>
+        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     </head>
     <body>
         <div class="container mt-5 col-lg-12">
@@ -38,106 +56,105 @@
                 <div class="col-lg-4 card mx-2">
                     <div class="card-body">
                         <h3 align="center">Registro de Usuario</h3>
-                        <form class="form" action="registrarUsuario" method="POST"> 
-
-                            <div class="form-group">                    
-                                <div class="mb-3 row">
-                                    <label class="col-sm-4 col-form-label">CURP:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="txtCurp" class="form-control" placeholder="Introduzca la Curp">
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-4 col-form-label">Nombre:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="txtNombre" class="form-control" placeholder="Introduzca el nombre">
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-4 col-form-label">Apellidos:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="txtapellidos" class="form-control" placeholder="Introduzca los apellidos">
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-4 col-form-label">Fecha de nacimiento:</label>
-                                    <div class="col-sm-6">
-                                        <input type="date" name="fecha" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <div class="col-sm-6">  
-                                        <label> Actividad: </label>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="radioActividad" id="radioActivo" value="Activo">
-                                            <label class="form-check-label" for="radioActivo" value="Activo">
-                                                Activo
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="radioActividad" id="radioInactivo" value="Inactivo">
-                                            <label class="form-check-label" for="radioInactivo" value="Inactivo">
-                                                Inactivo
-                                            </label>
+                            <div class="form-group">          
+                                <form class="form" action="ControlServlet" method="POST"> 
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-4 col-form-label">CURP:</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="txtCurp" class="form-control" placeholder="Introduzca la Curp">
                                         </div>
                                     </div>
-                                    <div class="col-sm-6" >  
-                                        <label> Sexo: </label>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="radioSexo" id="radioHombre" value="Masculino">
-                                            <label class="form-check-label" for="radioHombre" value="Masculino">
-                                                Masculino
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="radioSexo" id="radioMujer" value="Femenino">
-                                            <label class="form-check-label" for="radioMujer" value="Femenino">
-                                                Femenino
-                                            </label>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-4 col-form-label">Nombre:</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="txtNombre" class="form-control" placeholder="Introduzca el nombre">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-4 col-form-label">Usuario:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="txtUsuario" class="form-control" placeholder="Introduzca el usuario">
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-4 col-form-label">Apellidos:</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="txtapellidos" class="form-control" placeholder="Introduzca los apellidos">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-4 col-form-label">Contraseña:</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="txtPassword" class="form-control" placeholder="Introduzca la contraseña">
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-4 col-form-label">Fecha de nacimiento:</label>
+                                        <div class="col-sm-6">
+                                            <input type="date" name="fecha" class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-4 col-form-label">Escuela de pertenencia:</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-select" name="escuela">                                           
-                                            <%
-                                                for (int i = 0; i < listaEscuelas.size(); i++) {
-                                                    out.print("<option value=\"" + listaEscuelas.get(i).getNombre() + "\">" + listaEscuelas.get(i).getNombre() + "</option>");
-                                                }
-                                            %>
-                                        </select>
+                                    <div class="mb-3 row">
+                                        <div class="col-sm-6">  
+                                            <label> Actividad: </label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="radioActividad" id="radioActivo" value="Activo">
+                                                <label class="form-check-label" for="radioActivo" value="Activo">
+                                                    Activo
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="radioActividad" id="radioInactivo" value="Inactivo">
+                                                <label class="form-check-label" for="radioInactivo" value="Inactivo">
+                                                    Inactivo
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6" >  
+                                            <label> Sexo: </label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="radioSexo" id="radioHombre" value="Masculino">
+                                                <label class="form-check-label" for="radioHombre" value="Masculino">
+                                                    Masculino
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="radioSexo" id="radioMujer" value="Femenino">
+                                                <label class="form-check-label" for="radioMujer" value="Femenino">
+                                                    Femenino
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-4 col-form-label">Tipo de usuario:</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-select" name="tipoUsuario">
-                                            <option value="Administrador">Administrador</option>
-                                            <option value="Personal">Personal</option>
-                                        </select>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-4 col-form-label">Usuario:</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="txtUsuario" class="form-control" placeholder="Introduzca el usuario">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <input type="submit" name="registrar" value="Registrar" class="btn btn-success">
-                                </div>
-                                <div class="mb-3 row">
-                                    <button class="btn btn-danger" onclick="history.back()">Cancelar</button>
-                                </div>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-4 col-form-label">Contraseña:</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="txtPassword" class="form-control" placeholder="Introduzca la contraseña">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-4 col-form-label">Escuela de pertenencia:</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select" name="escuela">                                           
+                                                <%
+                                                    for (int i = 0; i < listaEscuelas.size(); i++) {
+                                                        out.print("<option value=\"" + listaEscuelas.get(i).getNombre() + "\">" + listaEscuelas.get(i).getNombre() + "</option>");
+                                                    }
+                                                %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-4 col-form-label">Tipo de usuario:</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select" name="tipoUsuario">
+                                                <option value="Administrador">Administrador</option>
+                                                <option value="Personal">Personal</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <button type="submit" name="accion" value="registrarUsuario" class="btn btn-success">Registrar Usuario</button>
+                                    </div>
+                                </form>
+                            <div class="mb-3 row">
+                                <button class="btn btn-danger" onclick="location.href='menuPrincipal.jsp'">Cancelar</button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-7 card">

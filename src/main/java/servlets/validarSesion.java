@@ -6,12 +6,15 @@ import java.io.PrintWriter;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import jwt.InicioSesionJWT;
+import javax.servlet.http.HttpSession;
+import jwt.JWT;
 import objetosNegocio.Usuario;
 
+@WebServlet(name = "validarSesion", urlPatterns = {"/validarSesion"})
 public class validarSesion extends HttpServlet {
 
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
@@ -29,19 +32,31 @@ public class validarSesion extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet validarSesion</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet validarSesion at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        
+        String usuario = request.getParameter("txtuser");
+        String contrasenia = request.getParameter("txtpass");
+
+        HttpSession session = request.getSession();
+
+        try {
+            usuarioSesion = usuarioDAO.consultarUsuarioInicioSesion(usuario, contrasenia);
+            String nombreCompleto = usuarioSesion.getNombre() + " " + usuarioSesion.getApellido();
+
+            // request.setAttribute("usuario", nombreCompleto);
+            session.setAttribute("usuario", nombreCompleto);
+
+            String token = JWT.generarJWT(response, usuarioSesion);
+
+            session.setAttribute("token", token);
+
+            response.sendRedirect("menuPrincipal.jsp");
+            //request.getRequestDispatcher("menuPrincipal.jsp").forward(request, response);
+        } catch (Exception e) {
+            session.setAttribute("error", "Error al iniciar sesión, credenciales invalidas");
+            response.sendRedirect("inicioSesion.jsp");
+            //request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -70,25 +85,7 @@ public class validarSesion extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String accion = request.getParameter("accion");
-        if (accion.equalsIgnoreCase("Ingresar")) {
-            String usuario = request.getParameter("txtuser");
-            String contrasenia = request.getParameter("txtpass");
-            try {
-                usuarioSesion = usuarioDAO.consultarUsuarioInicioSesion(usuario, contrasenia);
-                String nombreCompleto = usuarioSesion.getNombre() + " " + usuarioSesion.getApellido();
-                request.setAttribute("usuario", nombreCompleto);
-                InicioSesionJWT token = new InicioSesionJWT();
-//                String tokenUsuario = token.validar(usuarioSesion);
-//                request.setAttribute("token", tokenUsuario);
-                request.getRequestDispatcher("menuPrincipal.jsp").forward(request, response);
-            } catch (Exception e) {
-                request.setAttribute("error", "Error al iniciar sesión, credenciales invalidas");   
-                request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
-            }
-        } else {
-            request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**

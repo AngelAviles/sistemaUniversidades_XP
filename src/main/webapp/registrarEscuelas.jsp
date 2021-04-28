@@ -1,7 +1,23 @@
+<%@page import="jwt.JWT"%>
 <%@page import="objetosNegocio.Escuela"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<%
+    response.setHeader("Cache-Control", "no-cache");
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+
+    if (JWT.validarJWT(request, response)) {
+
+    } else {
+        session = request.getSession();
+        session.removeAttribute("token");
+        response.sendRedirect("inicioSesion.jsp");
+        //request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
+    }
+%>
 
 <!DOCTYPE html>
 <html>
@@ -10,6 +26,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     </head>
     
     <body>
@@ -42,7 +59,7 @@
                 <div class="row align-items-center justify-content-center">
                     <div class="col-auto">
                         <div class="border border-black border-3 mb-3">
-                            <form action="registrarEscuelas" method="post" enctype="multipart/form-data">
+                            <form action="ControlServlet" method="post" enctype="multipart/form-data">
                                 <div class="m-3">
                                     <p>
                                         <label for="formFileSm" class="form-label">Clave</label>
@@ -63,7 +80,7 @@
                                     </div>
                                     <div class="m-3">
                                         <div class="d-grid gap-6 mx-auto">
-                                            <button id="btn_guardar" onclick="registrar()" class="btn btn-primary" type="sumit">Registrar</button>
+                                            <button id="btn_guardar" onclick="registrar()" class="btn btn-primary" type="sumit" name="accion" value="registrarEscuelas">Registrar</button>
                                         </div>
                                     </div>
                                 </div>
