@@ -12,6 +12,10 @@
         <servlet-name>registrarUsuario</servlet-name>
         <servlet-class>servlets.registrarUsuario</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ControlServlet</servlet-name>
+        <servlet-class>servlets.ControlServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>validarSesion</servlet-name>
         <url-pattern>/validarSesion</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>registrarUsuario</servlet-name>
         <url-pattern>/registrarUsuario</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControlServlet</servlet-name>
+        <url-pattern>/ControlServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -1,15 +1,8 @@
 package servlets;
 
 import dao.EscuelaJpaController;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import javax.imageio.ImageIO;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
@@ -18,15 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import objetosNegocio.Escuela;
-import java.util.Base64;
 import javax.servlet.annotation.MultipartConfig;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.persistence.NoResultException;
+import javax.servlet.annotation.WebServlet;
 import org.apache.commons.io.IOUtils;
 
 @MultipartConfig
+@WebServlet(name = "registrarEscuelas", urlPatterns = {"/registrarEscuelas"})
 public class registrarEscuelas extends HttpServlet {
 
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");

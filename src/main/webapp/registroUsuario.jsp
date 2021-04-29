@@ -22,7 +22,7 @@
     response.setHeader("Cache-Control", "no-store");
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
-    
+
     List<Usuario> listaUsuarios = new ArrayList<>();
     List<Escuela> listaEscuelas = new ArrayList<>();
 
@@ -100,32 +100,21 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <div class="col-sm-6">  
+                                    <div class="col-sm-6">
                                         <label> Actividad: </label>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="radioActividad" id="radioActivo" value="Activo" checked>
                                             <label class="form-check-label" for="radioActivo" value="Activo">
                                                 Activo
                                             </label>
-
                                         </div>
-                                        <div class="col-sm-6" >  
-                                            <label> Sexo: </label>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="radioSexo" id="radioHombre" value="Masculino">
-                                                <label class="form-check-label" for="radioHombre" value="Masculino">
-                                                    Masculino
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="radioSexo" id="radioMujer" value="Femenino">
-                                                <label class="form-check-label" for="radioMujer" value="Femenino">
-                                                    Femenino
-                                                </label>
-                                            </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radioActividad" id="radioInactivo" value="Inactivo">
+                                            <label class="form-check-label" for="radioInactivo" value="Inactivo">
+                                                Inactivo
+                                            </label>
                                         </div>
                                     </div>
-
                                     <div class="col-sm-6" >  
                                         <label> Sexo: </label>
                                         <div class="form-check">
@@ -155,37 +144,36 @@
 
                                     </div>
                                 </div>
-                                    <div class="mb-3 row">
-                                        <label class="col-sm-4 col-form-label">Escuela de pertenencia:</label>
-                                        <div class="col-sm-8">
-                                            <select class="form-select" name="escuela">                                           
-                                                <%
-                                                    for (int i = 0; i < listaEscuelas.size(); i++) {
-                                                        out.print("<option value=\"" + listaEscuelas.get(i).getNombre() + "\">" + listaEscuelas.get(i).getNombre() + "</option>");
-                                                    }
-                                                %>
-                                            </select>
-                                        </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-4 col-form-label">Escuela de pertenencia:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-select" name="escuela">                                           
+                                            <%
+                                                for (int i = 0; i < listaEscuelas.size(); i++) {
+                                                    out.print("<option value=\"" + listaEscuelas.get(i).getNombre() + "\">" + listaEscuelas.get(i).getNombre() + "</option>");
+                                                }
+                                            %>
+                                        </select>
+                                    </div>
 
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-4 col-form-label">Tipo de usuario:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-select" name="tipoUsuario">
+                                            <option value="Administrador">Administrador</option>
+                                            <option value="Personal">Personal</option>
+                                        </select>
                                     </div>
-                                    <div class="mb-3 row">
-                                        <label class="col-sm-4 col-form-label">Tipo de usuario:</label>
-                                        <div class="col-sm-8">
-                                            <select class="form-select" name="tipoUsuario">
-                                                <option value="Administrador">Administrador</option>
-                                                <option value="Personal">Personal</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 row">
-                                        <button type="submit" name="accion" value="registrarUsuario" class="btn btn-success">Registrar Usuario</button>
-                                    </div>
-                              
-                                </form>
-                            <div class="mb-3 row">
-                                <button class="btn btn-danger" onclick="location.href='menuPrincipal.jsp'">Cancelar</button>
-
+                                </div>
+                                <div class="mb-3 row">
+                                    <button type="submit" name="accion" value="registrarUsuario" class="btn btn-success">Registrar Usuario</button>
+                                </div>
                             </div>
+                        </form>
+                        <div class="mb-3 row">
+                            <button class="btn btn-danger" onclick="location.href = 'menuPrincipal.jsp'">Cancelar</button>
+
                         </div>
                     </div>
                 </div>
@@ -232,12 +220,12 @@
                 </div>
             </div>
         </div> 
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
-    crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.24/datatables.min.js"></script>
-    <script src="js/app.js" charset="utf-8"></script>
-</body>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+        crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.24/datatables.min.js"></script>
+        <script src="js/app.js" charset="utf-8"></script>
+    </body>
 </html>

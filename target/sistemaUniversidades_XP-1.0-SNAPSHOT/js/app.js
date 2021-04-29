@@ -6,3 +6,11 @@ var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
 $(document).ready(function() {
   $('#alumnosTabla').DataTable();
 } );
+
+$(document).ready(function() {
+  $('#escuelasTabla').DataTable();
+} );
+
+$(document).ready(function() {
+  $('#usuariosTabla').DataTable();
+} );

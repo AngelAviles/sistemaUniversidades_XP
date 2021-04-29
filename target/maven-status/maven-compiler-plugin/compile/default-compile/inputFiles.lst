@@ -10,12 +10,13 @@ F:\Descargas\sistemaUniversidades_XP\src\main\java\dao\UsuarioJpaController.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\dao\MateriaJpaController.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\dao\AlumnoJpaController.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\objetosNegocio\Plandeestudio.java
+F:\Descargas\sistemaUniversidades_XP\src\main\java\servlets\ControlServlet.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\servlets\registrarUsuario.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\dao\MateriaPlandeestudioJpaController.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\com\mycompany\sistemaUniversidades_XP\NewMain.java
+F:\Descargas\sistemaUniversidades_XP\src\main\java\servlets\registrarEscuelas.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\dao\MateriasSerializacionJpaController.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\dao\PlandeestudioJpaController.java
-F:\Descargas\sistemaUniversidades_XP\src\main\java\jwt\InicioSesionJWT.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\servlets\generarKardex.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\dao\EscuelaPlandeestudioJpaController.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\control\ControlAlumno.java
@@ -26,3 +27,4 @@ F:\Descargas\sistemaUniversidades_XP\src\main\java\objetosNegocio\Usuario.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\objetosNegocio\Alumno.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\objetosNegocio\EscuelaPlandeestudio.java
 F:\Descargas\sistemaUniversidades_XP\src\main\java\objetosNegocio\Calificacion.java
+F:\Descargas\sistemaUniversidades_XP\src\main\java\jwt\JWT.java

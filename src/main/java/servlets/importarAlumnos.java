@@ -68,7 +68,7 @@ public class importarAlumnos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -97,7 +97,7 @@ public class importarAlumnos extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       
+
         HttpSession session = request.getSession();
 
         Part filePart = request.getPart("archivo"); // Retrieves <input type="file" name="archivo">
@@ -132,7 +132,7 @@ public class importarAlumnos extends HttpServlet {
         session.setAttribute("archivoInvalido", archivoInvalido);
         response.sendRedirect("importarAlumnos.jsp");
         //request.getRequestDispatcher("importarAlumnos.jsp").forward(request, response);
-        
+
     }
 
     /**
@@ -166,38 +166,39 @@ public class importarAlumnos extends HttpServlet {
         for (int a = 0; a <= numFilas; a++) {
             Row fila = sheet.getRow(a);
 
-            if (fila.getCell(0) == null
-                    || fila.getCell(1) == null
-                    || fila.getCell(2) == null) {
-                alumnosCamposVacios.add(new Integer(a + 1));
-            } else {
-                if (validarCURP(fila.getCell(2).getStringCellValue())) {
-                    if (validarNombre(fila.getCell(1).getStringCellValue())) {
-                        if (validarMatricula(fila.getCell(0).getStringCellValue())) {
-                            Alumno alumno = new Alumno(null,
-                                    fila.getCell(0).getStringCellValue(),
-                                    fila.getCell(1).getStringCellValue(),
-                                    fila.getCell(2).getStringCellValue(),
-                                    null);
-                            try {
-                                controlAlumno.agregarAlumno(alumno);
-                                alumnos.add(alumno);
-                            } catch (PreexistingEntityException ex) {
-                                alumnosPreexistentes.add(new Integer(a + 1));
+            if (fila != null) {
+                if (fila.getCell(0) == null
+                        || fila.getCell(1) == null
+                        || fila.getCell(2) == null) {
+                    alumnosCamposVacios.add(new Integer(a + 1));
+                } else {
+                    if (validarCURP(fila.getCell(2).getStringCellValue())) {
+                        if (validarNombre(fila.getCell(1).getStringCellValue())) {
+                            if (validarMatricula(fila.getCell(0).getStringCellValue())) {
+                                Alumno alumno = new Alumno(null,
+                                        fila.getCell(0).getStringCellValue(),
+                                        fila.getCell(1).getStringCellValue(),
+                                        fila.getCell(2).getStringCellValue(),
+                                        null);
+                                try {
+                                    controlAlumno.agregarAlumno(alumno);
+                                    alumnos.add(alumno);
+                                } catch (PreexistingEntityException ex) {
+                                    alumnosPreexistentes.add(new Integer(a + 1));
+                                }
+                            } else {
+                                alumnosMatriculaIncorrecta.add(new Integer(a + 1));
                             }
                         } else {
-                            alumnosMatriculaIncorrecta.add(new Integer(a + 1));
+                            alumnosNombreIncorrecto.add(new Integer(a + 1));
                         }
-                    } else {
-                        alumnosNombreIncorrecto.add(new Integer(a + 1));
-                    }
 
-                } else {
-                    alumnosCurpIncorrecta.add(new Integer(a + 1));
+                    } else {
+                        alumnosCurpIncorrecta.add(new Integer(a + 1));
+                    }
                 }
             }
         }
-
         return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
     }
 
@@ -216,40 +217,40 @@ public class importarAlumnos extends HttpServlet {
 
         for (int a = 0; a <= numFilas; a++) {
             Row fila = sheet.getRow(a);
-
-            if (fila.getCell(0) == null
-                    || fila.getCell(1) == null
-                    || fila.getCell(2) == null) {
-                alumnosCamposVacios.add(new Integer(a + 1));
-            } else {
-                if (validarCURP(fila.getCell(2).getStringCellValue())) {
-                    if (validarNombre(fila.getCell(1).getStringCellValue())) {
-                        if (validarMatricula(fila.getCell(0).getStringCellValue())) {
-                            Alumno alumno = new Alumno(null,
-                                    fila.getCell(0).getStringCellValue(),
-                                    fila.getCell(1).getStringCellValue(),
-                                    fila.getCell(2).getStringCellValue(),
-                                    null);
-                            try {
-                                controlAlumno.agregarAlumno(alumno);
-                                alumnos.add(alumno);
-                            } catch (PreexistingEntityException ex) {
-                                alumnosPreexistentes.add(new Integer(a + 1));
+            if (fila != null) {
+                if (fila.getCell(0) == null
+                        || fila.getCell(1) == null
+                        || fila.getCell(2) == null) {
+                    alumnosCamposVacios.add(new Integer(a + 1));
+                } else {
+                    if (validarCURP(fila.getCell(2).getStringCellValue())) {
+                        if (validarNombre(fila.getCell(1).getStringCellValue())) {
+                            if (validarMatricula(fila.getCell(0).getStringCellValue())) {
+                                Alumno alumno = new Alumno(null,
+                                        fila.getCell(0).getStringCellValue(),
+                                        fila.getCell(1).getStringCellValue(),
+                                        fila.getCell(2).getStringCellValue(),
+                                        null);
+                                try {
+                                    controlAlumno.agregarAlumno(alumno);
+                                    alumnos.add(alumno);
+                                } catch (PreexistingEntityException ex) {
+                                    alumnosPreexistentes.add(new Integer(a + 1));
+                                }
+                            } else {
+                                alumnosMatriculaIncorrecta.add(new Integer(a + 1));
                             }
                         } else {
-                            alumnosMatriculaIncorrecta.add(new Integer(a + 1));
+                            alumnosNombreIncorrecto.add(new Integer(a + 1));
                         }
+
                     } else {
-                        alumnosNombreIncorrecto.add(new Integer(a + 1));
+                        alumnosCurpIncorrecta.add(new Integer(a + 1));
                     }
-
-                } else {
-                    alumnosCurpIncorrecta.add(new Integer(a + 1));
                 }
+
             }
-
         }
-
         return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
     }
 
@@ -268,40 +269,41 @@ public class importarAlumnos extends HttpServlet {
         int contador = 0;
 
         while ((fila = csv.readNext()) != null) {
-
-            if (fila[0].isEmpty()
-                    || fila[1].isEmpty()
-                    || fila[2].isEmpty()) {
-                alumnosCamposVacios.add(new Integer(contador + 1));
-            } else {
-                if (validarCURP(fila[2])) {
-                    if (validarNombre(fila[1])) {
-                        if (validarMatricula(fila[0])) {
-                            Alumno alumno = new Alumno(null,
-                                    fila[0],
-                                    fila[1],
-                                    fila[2],
-                                    null);
-                            try {
-                                controlAlumno.agregarAlumno(alumno);
-                                alumnos.add(alumno);
-                            } catch (PreexistingEntityException ex) {
-                                alumnosPreexistentes.add(new Integer(contador + 1));
+            if (fila != null) {
+                if (fila[0].isEmpty()
+                        || fila[1].isEmpty()
+                        || fila[2].isEmpty()) {
+                    alumnosCamposVacios.add(new Integer(contador + 1));
+                } else {
+                    if (validarCURP(fila[2])) {
+                        if (validarNombre(fila[1])) {
+                            if (validarMatricula(fila[0])) {
+                                Alumno alumno = new Alumno(null,
+                                        fila[0],
+                                        fila[1],
+                                        fila[2],
+                                        null);
+                                try {
+                                    controlAlumno.agregarAlumno(alumno);
+                                    alumnos.add(alumno);
+                                } catch (PreexistingEntityException ex) {
+                                    alumnosPreexistentes.add(new Integer(contador + 1));
+                                }
+                            } else {
+                                alumnosMatriculaIncorrecta.add(new Integer(contador + 1));
                             }
                         } else {
-                            alumnosMatriculaIncorrecta.add(new Integer(contador + 1));
+                            alumnosNombreIncorrecto.add(new Integer(contador + 1));
                         }
+
                     } else {
-                        alumnosNombreIncorrecto.add(new Integer(contador + 1));
+                        alumnosCurpIncorrecta.add(new Integer(contador + 1));
                     }
 
-                } else {
-                    alumnosCurpIncorrecta.add(new Integer(contador + 1));
                 }
-
             }
-
             contador++;
+
         }
 
         csv.close();

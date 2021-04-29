@@ -2,8 +2,9 @@ dao\EscuelaJpaController.class
 objetosNegocio\MateriasSerializacion.class
 com\mycompany\sistemaUniversidades_XP\NewMain.class
 objetosNegocio\EscuelaPlandeestudio.class
+servlets\registrarEscuelas.class
 dao\exceptions\NonexistentEntityException.class
-jwt\InicioSesionJWT.class
+jwt\JWT.class
 objetosNegocio\Alumno.class
 dao\MateriaPlandeestudioJpaController.class
 control\ControlAlumno.class
@@ -35,3 +36,4 @@ objetosNegocio\Materia.class
 objetosNegocio\Usuario_.class
 dao\exceptions\IllegalOrphanException.class
 objetosNegocio\Calificacion_.class
+servlets\ControlServlet.class

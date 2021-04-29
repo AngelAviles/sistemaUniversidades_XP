@@ -48,7 +48,7 @@ public class JWT {
         String jwt = Jwts.builder()
                 .setSubject(SUBJECT)
                 .setId(usuario.getId() + "")
-                .setExpiration(new Date(tiempo + 60000))
+                .setExpiration(new Date(tiempo + 180000))
                 .claim(USER, usuario.getUser())
                 .claim(PASSWORD, usuario.getPassword())
                 .claim(SCOPE, "admin")
