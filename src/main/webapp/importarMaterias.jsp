@@ -12,18 +12,18 @@
     
     List<Materia> materiasRegistrados = new ArrayList<Materia>();
     
-    if (JWT.validarJWT(request, response)) {
+    //if (JWT.validarJWT(request, response)) {
         List<Materia> lista = (List) session.getAttribute("listaMaterias");
         session.removeAttribute("listaMaterias");
 
         if (lista != null) {
             materiasRegistrados = lista;
         }
-    } else {
+    /*} else {
         session = request.getSession();
         session.removeAttribute("token");
         response.sendRedirect("inicioSesion.jsp");
-    }
+    }*/
 %>
 
 <!DOCTYPE html>
@@ -81,7 +81,7 @@
                                     <input class="form-control form-control-sm col" id="nombreMateria" name="nombre" type="text" required/>
                                 </div>
                                 <div class="m-3">
-                                    <h6>SerializaciÃ³n</h6>
+                                    <h6>Serialización</h6>
                                     <div class="p-auto border border-black border-2">
                                         <label for="materiaSeriada" class="form-label mx-3 mt-3">Materia</label>
                                         <div class="row col mx-3 align-items-center">
@@ -98,21 +98,17 @@
                                                     }
                                                 %>
                                             </select>
-                                            <button class="btn btn-default col-sm-auto col-auto" type="button">
+                                            <button id="aniadirMateriaSeriada" class="btn btn-default col-sm-auto col-auto" type="button">
                                                 <span class="fa fa-plus-square" aria-hidden="true"></span>
                                             </button>
                                         </div>
-                                        <div class="d-flex row m-3 border border-black border-2 row-cols-2 align-items-center">
-                                            <i class="fa fa-minus-square my-2 col-auto" aria-hidden="true"></i>
-                                            <div class="my-2 col flex-grow-1">Materia 1 (Clave 1)</div>
-                                            <%
-                                                if (!materiasRegistrados.isEmpty()) {
-                                                    for (Materia materiasRegistrado : materiasRegistrados) {
-                                                        out.print("<i class=\"fa fa-minus-square my-2 col-auto\" aria-hidden=\"true\"></i>");
-                                                        out.print("<div class=\"my-2 col\">" + materiasRegistrado.getNombre() + " (" + materiasRegistrado.getClave() + ")</div>");
-                                                    }
-                                                }
-                                            %>
+                                        <div id="materiasSeleccionadas" class="d-flex row m-3 border border-black border-2 row-cols-1 align-items-center">
+                                            <div class="d-flex flex-grow-1">
+                                                <button id="eliminarMateriaSeriada" class="btn btn-default col-sm-auto col-auto" type="button">
+                                                    <span class="fa fa-minus-square" aria-hidden="true"></span>
+                                                </button>
+                                                <div class="my-2 col flex-grow-1">Materia 1 (Clave 1)</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -188,6 +184,26 @@
         <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.24/datatables.min.js"></script>
         <script src="js/app.js" charset="utf-8"></script>
+        
+        <script>
+            $(document).ready(function() {
+                
+                var wrapper = $("#materiasSeleccionadas");
+                var add_button = $("#aniadirMateriaSeriada");
+
+                $(add_button).click(function(e) {
+                    e.preventDefault();
+                    
+                    $(wrapper).append('<div class="d-flex flex-grow-1"><button id="eliminarMateriaSeriada" class="btn btn-default col-sm-auto col-auto" type="button"><span class="fa fa-minus-square" aria-hidden="true"></span></button><div class="my-2 col flex-grow-1">Materia 1 (Clave 1)</div><div>'); //add input box
+                    
+                });
+
+                $(wrapper).on("click", "#eliminarMateriaSeriada", function(e) {
+                    e.preventDefault();
+                    $(this).parent('div').remove();
+                })
+            });
+        </script>
     </body>
 
 </html>
