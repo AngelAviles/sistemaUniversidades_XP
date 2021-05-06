@@ -32,7 +32,7 @@ public class ControlServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
@@ -47,7 +47,7 @@ public class ControlServlet extends HttpServlet {
             session.removeAttribute("token");
             session.invalidate();
             request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
-            
+
         } else {
 
             if (JWT.validarJWT(request, response)) {
@@ -56,7 +56,7 @@ public class ControlServlet extends HttpServlet {
                 if (accion.equals("regresarMenuPrincipal")) {
                     //response.sendRedirect("menuPrincipal.jsp");
                     request.getRequestDispatcher("menuPrincipal.jsp").forward(request, response);
-                } else if (accion.equals("administrarAlumnos")) {
+                } else if (accion.equals("importarAlumnos")) {
                     //response.sendRedirect("importarAlumnos.jsp");
                     request.getRequestDispatcher("importarAlumnos.jsp").forward(request, response);
                 } else if (accion.equals("administrarEscuelas")) {
@@ -65,9 +65,15 @@ public class ControlServlet extends HttpServlet {
                 } else if (accion.equals("administrarUsuarios")) {
                     //response.sendRedirect("registroUsuario.jsp");
                     request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
-                    
+                } else if (accion.equals("consultarAlumnos")) {
+                    request.getRequestDispatcher("consultarAlumnos.jsp").forward(request, response);
+                } else if(accion.equals("administrarAlumnos")){
+                    request.getRequestDispatcher("administrarAlumnos.jsp").forward(request, response);
+                }
+
+
                     // Envia a Servlets
-                } else if (accion.equals("importarAlumnos")) {
+                else if (accion.equals("importarAlumnos")) {
                     response.sendRedirect("importarAlumnos");
                     //request.getRequestDispatcher("importarAlumnos").forward(request, response);
                 } else if (accion.equals("registrarEscuelas")) {
@@ -76,8 +82,8 @@ public class ControlServlet extends HttpServlet {
                 } else if (accion.equals("registrarUsuario")) {
                     //response.sendRedirect("importarUsuario");
                     request.getRequestDispatcher("registrarUsuario").forward(request, response);
-                } 
-                
+                }
+
             } else {
                 request.setAttribute("error", "Tiempo expirado. Volver a iniciar sesión.");
                 request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
@@ -124,5 +130,5 @@ public class ControlServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
+
 }

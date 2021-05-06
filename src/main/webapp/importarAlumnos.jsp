@@ -64,9 +64,9 @@
         <article>
             <h1 class="text-center">Importar Alumnos</h1>
 
-            <hr />
+            <hr>
 
-            <hr />
+            <hr>
 
             <div class="container-fluid">
                 <div class="row align-items-center justify-content-center">
@@ -100,7 +100,7 @@
                             </form>
                             <div class="m-3">
                                 <div class="d-grid gap-6 mx-auto">
-                                    <button class="btn btn-danger" onclick="location.href='menuPrincipal.jsp'">Cancelar</button>
+                                    <button class="btn btn-danger" onclick="location.href='administrarAlumnos.jsp'">Cancelar</button>
                                 </div>
                             </div>
                         </div>
