@@ -4,26 +4,26 @@
 <%@page import="java.util.List" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
-<%
+<%  
     response.setHeader("Cache-Control", "no-cache");
     response.setHeader("Cache-Control", "no-store");
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
-    
-    List<Materia> materiasRegistrados = new ArrayList<Materia>();
-    
-    //if (JWT.validarJWT(request, response)) {
-        List<Materia> lista = (List) session.getAttribute("listaMaterias");
-        session.removeAttribute("listaMaterias");
 
-        if (lista != null) {
-            materiasRegistrados = lista;
-        }
-    /*} else {
+    List<Materia> materiasRegistrados = new ArrayList<Materia>();
+
+    if (JWT.validarJWT(request, response)) {
+    List<Materia> lista = (List) session.getAttribute("listaMaterias");
+    session.removeAttribute("listaMaterias");
+
+    if (lista != null) {
+        materiasRegistrados = lista;
+    }
+    } else {
         session = request.getSession();
         session.removeAttribute("token");
         response.sendRedirect("inicioSesion.jsp");
-    }*/
+    }
 %>
 
 <!DOCTYPE html>
@@ -45,32 +45,13 @@
             <h1 class="text-center">Importar Materias</h1>
 
             <hr />
-            <nav>
-                <ul class="nav justify-content-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Escuelas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Capturistas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Alumnos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Calificaciones</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Kardex</a>
-                    </li>
-                </ul>
-            </nav>
-            
+
             <hr />
 
             <div class="d-flex flex-row">
                 <div class="d-flex row align-items-center justify-content-center w-100">
                     <div class="col-sm-5">
-                        <form action="importarMaterias" method="post">
+                        <form action="CrearMaterias" method="POST">
                             <div class="border border-black border-3 mb-3">
                                 <div class="m-3">
                                     <label for="claveMateria" class="form-label">Clave</label>
@@ -88,13 +69,9 @@
                                             <select id="materiaSeriada" class="form-select form-select-sm col" aria-label=".form-select-sm example">
                                                 <option selected>Selecciona una materia</option>
                                                 <% if (!materiasRegistrados.isEmpty()) {
-                                                        for (int i = 0; i < 10; i++) {
-                                                            out.print("<option value=\"" + 1 + "\">" + materiasRegistrados.get(i) + "</option>");
+                                                        for (int i = 0; i < materiasRegistrados.size(); i++) {
+                                                            out.print("<option value=\"" + materiasRegistrados.get(i).getId() + "\">" + materiasRegistrados.get(i).getNombre() + " (" + materiasRegistrados.get(i).getClave() + ")</option>");
                                                         }
-                                                    } else {
-                                                        out.print("<option value=\"1\">One</option>"
-                                                                + "<option value=\"2\">Two</option>"
-                                                                + "<option value=\"3\">Three</option>");
                                                     }
                                                 %>
                                             </select>
@@ -104,23 +81,19 @@
                                         </div>
                                         <div id="materiasSeleccionadas" class="d-flex row m-3 border border-black border-2 row-cols-1 align-items-center">
                                             <div class="d-flex flex-grow-1">
-                                                <button id="eliminarMateriaSeriada" class="btn btn-default col-sm-auto col-auto" type="button">
-                                                    <span class="fa fa-minus-square" aria-hidden="true"></span>
-                                                </button>
-                                                <div class="my-2 col flex-grow-1">Materia 1 (Clave 1)</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="m-3">
                                     <div class="d-grid gap-6 mx-auto">
-                                        <button class="btn btn-secondary" type="reset">Limpiar</button>
+                                        <button id="boton_limpiar" class="btn btn-secondary" type="reset">Limpiar</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="m-3 mt-5">
                                 <div class="d-grid gap-6 mx-auto">
-                                    <button class="btn btn-primary" type="submit">Importar</button>
+                                    <button class="btn btn-primary" type="submit" name="accion" value="crearMateria">Crear Materia</button>
                                 </div>
                             </div>
                         </form>
@@ -145,22 +118,24 @@
                                                         + "<td>" + a.getNombre() + "</td>"
                                                         + "<td>");
 
-                                                for (int j = 0; j < a.getMateriasSeriadas().size(); j++) {
-                                                    if (j == 0) {
-                                                        out.print(a.getMateriasSeriadas().get(i).getMateria().getNombre());
-                                                    } else {
-                                                        out.print(", " + a.getMateriasSeriadas().get(i).getMateria().getNombre());
+                                                if (a.getMaterias().size() != 0) {
+                                                    for (int j = 0; j < a.getMaterias().size(); j++) {
+                                                        if (!a.equals(a.getMaterias().get(j).getMateriaSeriada())) {
+                                                            if (j == 0) {
+                                                                out.print(a.getMaterias().get(j).getMateriaSeriada().getNombre());
+                                                            } else {
+                                                                out.print(", " + a.getMaterias().get(j).getMateriaSeriada().getNombre());
+                                                            }
+                                                        }
+
                                                     }
-                                                }
-                                                out.print(".</td>"
-                                                        + "</tr>"
-                                                );
+                                                } 
                                             }
                                         } else {
                                             out.print("<tr>"
-                                                    + "<td scope=\"row\">Clave 1</td>"
-                                                    + "<td>Materia 1</td>"
-                                                    + "<td>Materia Seriada 1, Materia Seriada 2</td>"
+                                                    + "<td scope=\"row\"></td>"
+                                                    + "<td></td>"
+                                                    + "<td></td>"
                                                     + "</tr>");
                                         }
                                     %>
@@ -169,7 +144,7 @@
                         </div>
                         <div class="m-3 row">
                             <div class="d-grid justify-content-md-end">
-                                <button class="btn btn-danger me-md-2" onclick="history.back()">Cancelar</button>
+                                <button class="btn btn-danger me-md-2" onclick="location.href='menuPrincipal.jsp'">Cancelar</button>
                             </div>
                         </div>
                     </div>
@@ -184,25 +159,68 @@
         <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.24/datatables.min.js"></script>
         <script src="js/app.js" charset="utf-8"></script>
-        
+
         <script>
-            $(document).ready(function() {
-                
-                var wrapper = $("#materiasSeleccionadas");
-                var add_button = $("#aniadirMateriaSeriada");
+                                    $(document).ready(function () {
 
-                $(add_button).click(function(e) {
-                    e.preventDefault();
-                    
-                    $(wrapper).append('<div class="d-flex flex-grow-1"><button id="eliminarMateriaSeriada" class="btn btn-default col-sm-auto col-auto" type="button"><span class="fa fa-minus-square" aria-hidden="true"></span></button><div class="my-2 col flex-grow-1">Materia 1 (Clave 1)</div><div>'); //add input box
-                    
-                });
+                                        var wrapper = $("#materiasSeleccionadas");
+                                        var add_button = $("#aniadirMateriaSeriada");
+                                        var selectMaterias = document.getElementById("materiaSeriada");
+                                        var reset_button = document.getElementById("boton_limpiar");
 
-                $(wrapper).on("click", "#eliminarMateriaSeriada", function(e) {
-                    e.preventDefault();
-                    $(this).parent('div').remove();
-                })
-            });
+                                        var arrayMateriasSeriadas = [];
+
+                                        $(add_button).click(function (e) {
+
+                                            var indice = selectMaterias.selectedIndex;
+                                            console.log(indice);
+
+                                            if (indice > 0) {
+                                                if (!arrayMateriasSeriadas.includes(selectMaterias.value)) {
+                                                    e.preventDefault();
+
+                                                    arrayMateriasSeriadas.push(selectMaterias.value);
+                                                    console.log(arrayMateriasSeriadas);
+
+                                                    $(wrapper).append('<div class="d-flex flex-grow-1"> ' +
+                                                            '<button id="eliminarMateriaSeriada" class="btn btn-default col-sm-auto col-auto" type="button">' +
+                                                            '<span class="fa fa-minus-square" aria-hidden="true"></span>' +
+                                                            '</button>' +
+                                                            '<div name="listaMateriasSeriadas" class="my-2 col flex-grow-1" value="' + selectMaterias.value + '" >' + selectMaterias.options.item(indice).text + '</div>' +
+                                                            '<input name="listaMateriasSeriadas" value="' + selectMaterias.value + '" type="hidden" />' +
+                                                            '</div>'); //add input box
+                                                } else {
+                                                    alert("La materia ya fue seleccionada");
+                                                }
+
+                                            } else {
+                                                alert("Selecciona una materia para serializarla");
+                                            }
+
+                                        });
+
+                                        $(wrapper).on("click", "#eliminarMateriaSeriada", function (e) {
+                                            e.preventDefault();
+
+                                            let valor = $(this).siblings("div").attr("value");
+                                            console.log($(this).siblings("div"));
+                                            console.log(valor);
+
+                                            const index = arrayMateriasSeriadas.indexOf(valor);
+                                            if (index > -1) {
+                                                arrayMateriasSeriadas.splice(index, 1);
+                                            }
+
+                                            $(this).parent('div').remove();
+                                        });
+
+                                        reset_button.onclick = () => {
+                                            const myNode = document.getElementById("materiasSeleccionadas");
+                                            myNode.innerHTML = '';
+
+                                            arrayMateriasSeriadas = [];
+                                        };
+                                    });
         </script>
     </body>
 

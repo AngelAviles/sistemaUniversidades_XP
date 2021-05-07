@@ -49,7 +49,7 @@ public class MateriasSerializacion implements Serializable {
         this.materia = materia;
         this.materiaSeriada = materiaSeriada;
     }
-    
+
     
     
 
@@ -76,7 +76,7 @@ public class MateriasSerializacion implements Serializable {
     public void setMateriaSeriada(Materia materiaSeriada) {
         this.materiaSeriada = materiaSeriada;
     }
-    
+
     
 
     @Override
