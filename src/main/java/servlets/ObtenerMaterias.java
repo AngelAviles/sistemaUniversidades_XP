@@ -62,12 +62,7 @@ public class ObtenerMaterias extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        
-        List<Materia> materias = materiaJpaController.findMateriaEntities();
-        
-        session.setAttribute("listaMaterias", materias);
-        response.sendRedirect("crearMaterias.jsp");
+        processRequest(request, response);
     }
 
     /**
@@ -81,12 +76,7 @@ public class ObtenerMaterias extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        
-        List<Materia> materias = materiaJpaController.findMateriaEntities();
-        
-        session.setAttribute("listaMaterias", materias);
-        response.sendRedirect("crearMaterias.jsp");
+        processRequest(request, response);
     }
 
     /**

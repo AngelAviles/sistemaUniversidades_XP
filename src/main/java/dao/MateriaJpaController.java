@@ -347,6 +347,22 @@ public class MateriaJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Materia> consultarMateriasClave(String clave) {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM Materia c WHERE c.clave = :clave");
+        consulta.setParameter("clave", clave);
+        List<Materia> materias = consulta.getResultList();
+        return materias;
+    }
+    
+    public List<Materia> consultarMateriasNombre(String nombre) {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM Materia c WHERE c.nombre = :nombre");
+        consulta.setParameter("nombre", nombre);
+        List<Materia> materias = consulta.getResultList();
+        return materias;
+    }
 
     public int getMateriaCount() {
         EntityManager em = getEntityManager();

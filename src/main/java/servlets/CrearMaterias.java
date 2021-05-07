@@ -26,7 +26,7 @@ import objetosNegocio.MateriasSerializacion;
  */
 @WebServlet(name = "CrearMaterias", urlPatterns = {"/CrearMaterias"})
 public class CrearMaterias extends HttpServlet {
-    
+
     private static EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
     private static MateriaJpaController materiaJpaController = new MateriaJpaController(factory);
     private static MateriasSerializacionJpaController materiasSerializacionJpaController = new MateriasSerializacionJpaController(factory);
@@ -42,7 +42,7 @@ public class CrearMaterias extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -71,39 +71,49 @@ public class CrearMaterias extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        
+
         HttpSession session = request.getSession();
-        
+
         String clave = request.getParameter("clave");
         String nombre = request.getParameter("nombre");
         String[] listaMateriasSeriadas = request.getParameterValues("listaMateriasSeriadas");
-        
-        Materia nuevaMateria = new Materia();
-        nuevaMateria.setClave(clave);
-        nuevaMateria.setNombre(nombre);
-        
-        materiaJpaController.create(nuevaMateria);
-        
-        if (listaMateriasSeriadas != null) {
-            for (String listaMateriasSeriada : listaMateriasSeriadas) {
-                Materia materiaSeriada = materiaJpaController.findMateria(Integer.valueOf(listaMateriasSeriada));
 
-                MateriasSerializacion materiasSerializacion = new MateriasSerializacion();
-                
-                nuevaMateria.addMateria(materiasSerializacion);
-                materiaSeriada.addMateriaSeriada(materiasSerializacion);
-                
-                materiasSerializacionJpaController.create(materiasSerializacion);
+        boolean claveRepetida = materiaJpaController.consultarMateriasClave(clave).size() == 0 ? false : true;
+        boolean nombreRepetida = materiaJpaController.consultarMateriasNombre(nombre).size() == 0 ? false : true;
+
+        if (!claveRepetida && !nombreRepetida) {
+
+            Materia nuevaMateria = new Materia();
+            nuevaMateria.setClave(clave);
+            nuevaMateria.setNombre(nombre);
+
+            materiaJpaController.create(nuevaMateria);
+
+            if (listaMateriasSeriadas != null) {
+                for (String listaMateriasSeriada : listaMateriasSeriadas) {
+                    Materia materiaSeriada = materiaJpaController.findMateria(Integer.valueOf(listaMateriasSeriada));
+
+                    MateriasSerializacion materiasSerializacion = new MateriasSerializacion();
+
+                    nuevaMateria.addMateria(materiasSerializacion);
+                    materiaSeriada.addMateriaSeriada(materiasSerializacion);
+
+                    materiasSerializacionJpaController.create(materiasSerializacion);
+                }
             }
+
         }
-        
+
         List<Materia> materias = materiaJpaController.findMateriaEntities();
-        
+
         session.setAttribute("listaMaterias", materias);
+        session.setAttribute("claveRepetida", claveRepetida);
+        session.setAttribute("nombreRepetida", nombreRepetida);
         response.sendRedirect("crearMaterias.jsp");
+
     }
 
     /**

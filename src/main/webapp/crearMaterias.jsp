@@ -11,14 +11,28 @@
     response.setDateHeader("Expires", 0);
 
     List<Materia> materiasRegistrados = new ArrayList<Materia>();
+    Boolean claveRepetida = false;
+    Boolean nombreRepetida = false;
 
     if (JWT.validarJWT(request, response)) {
-    List<Materia> lista = (List) session.getAttribute("listaMaterias");
-    session.removeAttribute("listaMaterias");
+        List<Materia> lista = (List) session.getAttribute("listaMaterias");
+        Boolean claveAux = (Boolean) session.getAttribute("claveRepetida");
+        Boolean nombreAux = (Boolean) session.getAttribute("nombreRepetida");
+        session.removeAttribute("listaMaterias");
+        session.removeAttribute("claveRepetida");
+        session.removeAttribute("nombreRepetida");
 
-    if (lista != null) {
-        materiasRegistrados = lista;
-    }
+        if (lista != null) {
+            materiasRegistrados = lista;
+        }
+        
+        if (claveAux != null) {
+            claveRepetida = claveAux;
+        }
+        
+        if (nombreAux != null) {
+            nombreRepetida = nombreAux;
+        }
     } else {
         session = request.getSession();
         session.removeAttribute("token");
@@ -42,7 +56,7 @@
 
     <body>
         <article>
-            <h1 class="text-center">Importar Materias</h1>
+            <h1 class="text-center">Crear Materia</h1>
 
             <hr />
 
@@ -55,7 +69,7 @@
                             <div class="border border-black border-3 mb-3">
                                 <div class="m-3">
                                     <label for="claveMateria" class="form-label">Clave</label>
-                                    <input class="form-control form-control-sm col" id="claveMateria" name="clave" type="text" required/>
+                                    <input class="form-control form-control-sm col" id="claveMateria" name="clave" type="text" required pattern="^([1-6]){1}0([1-8]){1}$"/>
                                 </div>
                                 <div class="m-3">
                                     <label for="nombreMateria" class="form-label">Materia</label>
@@ -149,7 +163,21 @@
                         </div>
                     </div>
                 </div>
-            </div>            
+            </div>       
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (!claveRepetida) {
+                                    out.print("hidden");
+                                } %>>
+                <h4 class="alert-heading">¡Clave repetida!</h4>
+                <p>La clave de la materia ingresada esta repetida.</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (!nombreRepetida) {
+                                    out.print("hidden");
+                                } %>>
+                <h4 class="alert-heading">¡Nombre repetida!</h4>
+                <p>El nombre de la materia ingresada esta repetido.</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>    
         </article>
 
         <!-- JavaScript Bundle with Popper -->
