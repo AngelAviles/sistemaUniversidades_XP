@@ -16,6 +16,14 @@
         <servlet-name>ControlServlet</servlet-name>
         <servlet-class>servlets.ControlServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>importarCalificaciones</servlet-name>
+        <servlet-class>servlets.importarCalificaciones</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>administrarPE</servlet-name>
+        <servlet-class>servlets.administrarPE</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>validarSesion</servlet-name>
         <url-pattern>/validarSesion</url-pattern>
@@ -31,6 +39,14 @@
     <servlet-mapping>
         <servlet-name>ControlServlet</servlet-name>
         <url-pattern>/ControlServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>importarCalificaciones</servlet-name>
+        <url-pattern>/importarCalificaciones</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>administrarPE</servlet-name>
+        <url-pattern>/administrarPE</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

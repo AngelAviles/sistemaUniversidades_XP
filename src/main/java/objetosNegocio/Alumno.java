@@ -54,6 +54,19 @@ public class Alumno implements Serializable {
         this.calificaciones = new ArrayList<>();
     }
 
+    public Alumno(String matricula, String nombre, String curp) {
+        this.matricula = matricula;
+        this.nombre = nombre;
+        this.curp = curp;
+    }
+
+    public Alumno(String matricula, String nombre, String curp, List<Calificacion> calificaciones) {
+        this.matricula = matricula;
+        this.nombre = nombre;
+        this.curp = curp;
+        this.calificaciones = calificaciones;
+    }
+    
     public Alumno(Integer id, String matricula, String nombre, String curp, List<Calificacion> calificaciones) {
         this.id = id;
         this.matricula = matricula;
@@ -131,7 +144,9 @@ public class Alumno implements Serializable {
 
     @Override
     public String toString() {
-        return "objetosNegocio.Alumno[ id=" + id + " ]";
+        return "Alumno{" + "id=" + id + ", matricula=" + matricula + ", nombre=" + nombre + ", curp=" + curp + '}';
     }
+
+
     
 }

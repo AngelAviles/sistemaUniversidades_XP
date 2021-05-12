@@ -69,7 +69,7 @@
             <hr />
 
             <div class="container-fluid">
-                <div class="row align-items-center justify-content-center">
+                <div class="row justify-content-center">
                     <div class="col-auto">
                         <div class="border border-black border-3 mb-3">
                             <form action="importarAlumnos" method="post" enctype="multipart/form-data">
@@ -100,7 +100,7 @@
                             </form>
                             <div class="m-3">
                                 <div class="d-grid gap-6 mx-auto">
-                                    <button class="btn btn-danger" onclick="location.href='menuPrincipal.jsp'">Cancelar</button>
+                                    <button class="btn btn-danger" onclick="location.href='administrarAlumnos.jsp'">Cancelar</button>
                                 </div>
                             </div>
                         </div>
