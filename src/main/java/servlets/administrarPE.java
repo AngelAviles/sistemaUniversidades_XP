@@ -5,17 +5,28 @@
  */
 package servlets;
 
+import dao.MateriaJpaController;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import dao.MateriaPlandeestudioJpaController;
+import dao.PlandeestudioJpaController;
+import dao.exceptions.IllegalOrphanException;
+import dao.exceptions.NonexistentEntityException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import objetosNegocio.Materia;
+import objetosNegocio.MateriaPlandeestudio;
+import objetosNegocio.Plandeestudio;
 
-/**
- *
- * @author Bryan
- */
+@WebServlet(name = "administrarPE", urlPatterns = {"/administrarPE"})
 public class administrarPE extends HttpServlet {
 
     /**
@@ -35,7 +46,7 @@ public class administrarPE extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet administrarPE</title>");            
+            out.println("<title>Servlet administrarPE</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet administrarPE at " + request.getContextPath() + "</h1>");
@@ -70,7 +81,27 @@ public class administrarPE extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
+        MateriaPlandeestudioJpaController relacionMateriaPlanDAO = new MateriaPlandeestudioJpaController(factory);
+        PlandeestudioJpaController planDAO = new PlandeestudioJpaController(factory);
+        MateriaJpaController materiaDAO = new MateriaJpaController(factory);
+
+        Plandeestudio planNuevo = new Plandeestudio(request.getParameter("txtNombrePlan"));
+        planDAO.create(planNuevo);
+        
+        Plandeestudio planCreado = planDAO.consultarPorNombre(planNuevo.getNombre());
+        ArrayList<MateriaPlandeestudio> listaRelProductoVenta = new ArrayList<>();
+
+        for (int i = 1; i < 7; i++) {
+            for (int j = 1; j < 9; j++) {
+                Materia materia = materiaDAO.consultarPorNombre(request.getParameter("sem" + i + "mat" + j));
+                MateriaPlandeestudio materiaPlan = new MateriaPlandeestudio(materia, planCreado);
+                relacionMateriaPlanDAO.create(materiaPlan);
+            }
+        }
+
+        request.getRequestDispatcher("AdministrarPE.jsp").forward(request, response);
     }
 
     /**

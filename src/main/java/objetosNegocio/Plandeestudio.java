@@ -57,6 +57,10 @@ public class Plandeestudio implements Serializable {
         this.materias = new ArrayList<>();
     }
 
+    public Plandeestudio(String nombre) {
+        this.nombre = nombre;
+    }
+
     public Plandeestudio(String nombre, List<MateriaPlandeestudio> materias) {
         this.nombre = nombre;
         this.materias = materias;

@@ -85,6 +85,9 @@ public class ControlServlet extends HttpServlet {
                 } else if (accion.equals("registrarUsuario")) {
                     //response.sendRedirect("importarUsuario");
                     request.getRequestDispatcher("registrarUsuario").forward(request, response);
+                } else if (accion.equals("crearPlan")) {
+                    //response.sendRedirect("importarUsuario");
+                    request.getRequestDispatcher("administrarPE").forward(request, response);
                 } 
                 
             } else {

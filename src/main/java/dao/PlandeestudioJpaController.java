@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import objetosNegocio.EscuelaPlandeestudio;
 import objetosNegocio.Plandeestudio;
 
@@ -253,5 +254,13 @@ public class PlandeestudioJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public Plandeestudio consultarPorNombre(String nombre) throws NoResultException {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM Plandeestudio c WHERE c.nombre = :nombre");
+        consulta.setParameter("nombre", nombre);
+        Plandeestudio planEstudio = (Plandeestudio) consulta.getSingleResult();
+        return planEstudio;
+    }
+
 }

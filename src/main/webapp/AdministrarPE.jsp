@@ -1,3 +1,5 @@
+<%@page import="dao.MateriaJpaController"%>
+<%@page import="objetosNegocio.Materia"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="jwt.JWT"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -20,14 +22,14 @@
 
     List<Usuario> listaUsuarios = new ArrayList<>();
     List<Escuela> listaEscuelas = new ArrayList<>();
+    List<Materia> listaMaterias = new ArrayList<>();
 
     if (JWT.validarJWT(request, response)) {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
-        UsuarioJpaController usuarioDAO = new UsuarioJpaController(factory);
-        listaUsuarios = usuarioDAO.findUsuarioEntities();
-        request.setAttribute("listaUsuarios", listaUsuarios);
-        EscuelaJpaController escuelaDAO = new EscuelaJpaController(factory);
-        listaEscuelas = escuelaDAO.findEscuelaEntities();
+        MateriaJpaController materiaDAO = new MateriaJpaController(factory);
+        listaMaterias = materiaDAO.findMateriaEntities();
+
+        // request.setAttribute("listaUsuarios", listaUsuarios);
     } else {
         session = request.getSession();
         session.removeAttribute("token");
@@ -50,416 +52,599 @@
         <h1 class="text-center">Administrar Planes de Estudio</h1>
         <hr />
         <hr />
-        
+
         <div class="container mt-12 col-lg-12">
             <div class="col-lg-12 card mx-2">
                 <div class="card-body">
                     <form class="form" action="ControlServlet" method="POST">
                         <div class="form-group">                    
-                            <div class="mb-4 row">
-                                <label class="col-sm-1 col-form-label">Clave:</label>
-                                <div class="col-sm-3">
-                                    <input minlength="1" maxlength="10" type="text" name="txtClave" class="form-control" placeholder="Introduzca la Clave" required="">
-                                </div>
-                                <label class="col-sm-1 col-form-label">Nombre:</label>
-                                <div class="col-sm-6">
+                            <div class="mb-4 row">                         
+                                <label class="col-sm-3 col-form-label" align="center">Nombre del plan de estudio:</label>
+                                <div class="col-sm-8">
                                     <input minlength="1" maxlength="40" type="text" name="txtNombrePlan" class="form-control" placeholder="Introduzca el nombre del plan de estudio" required="">
                                 </div>
                             </div>
                             <div class="col-lg-12 card table-responsive">
-                            <div class="card-body" style="">
-                                <table class="table table-striped border border-black border-3" id="planesTabla">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>Semestre</th>
-                                            <th>Materia 1</th>
-                                            <th>Materia 2</th>
-                                            <th>Materia 3</th>
-                                            <th>Materia 4</th>
-                                            <th>Materia 5</th>
-                                            <th>Materia 6</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>       
-                                        <tr>
-                                            <td>Semestre 1</td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Semestre 2</td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Semestre 3</td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Semestre 4</td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Semestre 5</td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tr>
-                                        <tr>
-                                            <td>Semestre 6</td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tr>
-                                        <tr>
-                                            <td>Semestre 7</td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tr>
-                                        <tr>
-                                            <td>Semestre 8</td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                            <td>    
-                                                <div class="col-sm-auto">
-                                                <select class="form-select" name="materia">
-                                                    <option value="volvo">Seleccione la materia</option>
-                                                </select>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tr>
-                                    </tbody>
-                                </table> 
+                                <div class="card-body" style="">
+                                    <table class="table table-striped border border-black border-3" id="planesTabla">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Semestre</th>
+                                                <th>Materia 1</th>
+                                                <th>Materia 2</th>
+                                                <th>Materia 3</th>
+                                                <th>Materia 4</th>
+                                                <th>Materia 5</th>
+                                                <th>Materia 6</th>
+                                                <th>Materia 7</th>
+                                                <th>Materia 8</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>       
+                                            <tr>
+                                                <td>Semestre 1</td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem1mat1" onclick="">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem1mat2">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem1mat3">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem1mat4">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem1mat5">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem1mat6">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem1mat7">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem1mat8">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Semestre 2</td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem2mat1">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem2mat2">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem2mat3">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem2mat4">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem2mat5">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem2mat6">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem2mat7">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem2mat8">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Semestre 3</td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem3mat1">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem3mat2">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem3mat3">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem3mat4">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem3mat5">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem3mat6">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem3mat7">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem3mat8">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Semestre 4</td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem4mat1">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem4mat2">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem4mat3">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem4mat4">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem4mat5">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem4mat6">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem4mat7">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem4mat8">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Semestre 5</td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem5mat1">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem5mat2">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem5mat3">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem5mat4">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem5mat5">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem5mat6">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem5mat7">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem5mat8">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td>Semestre 6</td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem6mat1">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem6mat2">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem6mat3">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem6mat4">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem6mat5">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem6mat6">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem6mat7">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>    
+                                                    <div class="col-sm-auto">
+                                                        <select class="form-select" name="sem6mat8">
+                                                            <%
+                                                                for (int i = 0; i < listaMaterias.size(); i++) {
+                                                                    out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");
+                                                                }
+                                                            %>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>                                          
+                                            
+                                        </tbody>
+                                    </table> 
                                 </div>
-                            </div>   
+                            </div>
+                            <br>
                             <div class="mb-3 row">
                                 <div class="col-sm-6" align="center">
-                                    <button type="submit" name="accion" value="crearPlan" class="btn btn-success">Registrar Usuario</button>
+                                    <button type="submit" name="accion" value="crearPlan" class="btn btn-success">Crear plan</button>
                                 </div>
-                                
+
                                 <div class="col-sm-6" align="center">
                                     <button class="btn btn-danger" onclick="location.href = 'menuPrincipal.jsp'">Cancelar</button>
                                 </div>
 
                             </div>
-                            
+
                         </div>           
                     </form>
                 </div>

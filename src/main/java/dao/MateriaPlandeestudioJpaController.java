@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import objetosNegocio.Materia;
@@ -193,5 +194,27 @@ public class MateriaPlandeestudioJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public Boolean consultarMateriaRepetida(Materia materia, Plandeestudio plan) throws NoResultException {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM MateriaPlandeestudio c WHERE c.materia = :materia AND c.plandeestudio = :plan");
+        consulta.setParameter("materia", materia);
+        consulta.setParameter("plan", plan);
+        try {
+            MateriaPlandeestudio relaMateriaPlan = (MateriaPlandeestudio) consulta.getSingleResult();
+            System.out.println("llego hasta abajo");
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    /**
+     * public Usuario consultarUsuarioInicioSesion(String user, String password)
+     * { EntityManager em = getEntityManager(); Query consulta =
+     * em.createQuery("SELECT c FROM Usuario c WHERE c.user = :user AND
+     * c.password = :password"); consulta.setParameter("user", user);
+     * consulta.setParameter("password", password); Usuario usuario = (Usuario)
+     * consulta.getSingleResult(); return usuario; }
+     */
 }

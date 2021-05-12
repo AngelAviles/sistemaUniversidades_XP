@@ -70,13 +70,7 @@ public class NewMain {
         AlumnoJpaController alumnoDAO = new AlumnoJpaController(factory);
         CalificacionJpaController calificacionDAO = new CalificacionJpaController(factory);
 
-        Alumno alumno = alumnoDAO.consultarEscuelaNombre("186203");
-        Materia materia = materiaDAO.findMateria(4);
-        System.out.println(alumno);
-        System.out.println(materia);
-
-        Calificacion calificacion = new Calificacion(materia, alumno, 10);
-        calificacionDAO.create(calificacion);
+        System.out.println(planEstudioDAO.consultarPorNombre("PlanPruebas"));
         
         
 //        Plandeestudio planEstudio = planEstudioDAO.findPlandeestudio(1);
