@@ -17,12 +17,20 @@
         <servlet-class>servlets.ControlServlet</servlet-class>
     </servlet>
     <servlet>
+
+        <servlet-name>CrearMaterias</servlet-name>
+        <servlet-class>servlets.CrearMaterias</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ObtenerMaterias</servlet-name>
+        <servlet-class>servlets.ObtenerMaterias</servlet-class>
         <servlet-name>importarCalificaciones</servlet-name>
         <servlet-class>servlets.importarCalificaciones</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>administrarPE</servlet-name>
         <servlet-class>servlets.administrarPE</servlet-class>
+
     </servlet>
     <servlet-mapping>
         <servlet-name>validarSesion</servlet-name>
@@ -41,12 +49,21 @@
         <url-pattern>/ControlServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+
+        <servlet-name>CrearMaterias</servlet-name>
+        <url-pattern>/CrearMaterias</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ObtenerMaterias</servlet-name>
+        <url-pattern>/ObtenerMaterias</url-pattern>
+
         <servlet-name>importarCalificaciones</servlet-name>
         <url-pattern>/importarCalificaciones</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>administrarPE</servlet-name>
         <url-pattern>/administrarPE</url-pattern>
+
     </servlet-mapping>
     <session-config>
         <session-timeout>

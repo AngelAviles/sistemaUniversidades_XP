@@ -65,6 +65,9 @@ public class ControlServlet extends HttpServlet {
                 } else if (accion.equals("administrarUsuarios")) {
                     //response.sendRedirect("registroUsuario.jsp");
                     request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+                } else if (accion.equals("administrarMaterias")) {
+                    //response.sendRedirect("registroUsuario.jsp");
+                    response.sendRedirect("ObtenerMaterias");
                 } else if (accion.equals("consultarAlumnos")) {
                     request.getRequestDispatcher("consultarAlumnos.jsp").forward(request, response);
                 } else if(accion.equals("administrarAlumnos")){
@@ -84,6 +87,11 @@ public class ControlServlet extends HttpServlet {
                     request.getRequestDispatcher("registrarEscuelas").forward(request, response);
                 } else if (accion.equals("registrarUsuario")) {
                     //response.sendRedirect("importarUsuario");
+                    request.getRequestDispatcher("registrarUsuario").forward(request, response); 
+                } else if (accion.equals("crearMateria")) {
+                    //response.sendRedirect("importarUsuario");
+                    request.getRequestDispatcher("CrearMaterias").forward(request, response);
+
                     request.getRequestDispatcher("registrarUsuario").forward(request, response);
                 } else if (accion.equals("crearPlan")) {
                     //response.sendRedirect("importarUsuario");

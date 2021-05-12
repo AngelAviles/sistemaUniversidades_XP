@@ -35,7 +35,7 @@ public class Materia implements Serializable {
     
     @Column(name = "nombre", nullable = false, unique = true)
     private String nombre;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "materia")
     private List<Calificacion> calificaciones;
     
@@ -54,12 +54,12 @@ public class Materia implements Serializable {
         calificacion.setMateria(this);
         this.calificaciones.add(calificacion);
     }
-    
+
     public void addPlanDeEstudio(MateriaPlandeestudio planDeEstudio) {
         planDeEstudio.setMateria(this);
         this.planesDeEstudio.add(planDeEstudio);
     }
-    
+
     public void addMateria(MateriasSerializacion materia) {
         materia.setMateria(this);
         this.materias.add(materia);
