@@ -43,6 +43,11 @@ public class MateriaPlandeestudio implements Serializable {
     public MateriaPlandeestudio() {
     }
 
+    public MateriaPlandeestudio(Materia materia, Plandeestudio plandeestudio) {
+        this.materia = materia;
+        this.plandeestudio = plandeestudio;
+    }
+    
     public MateriaPlandeestudio(Integer id, Materia materia, Plandeestudio plandeestudio) {
         this.id = id;
         this.materia = materia;
@@ -101,7 +106,7 @@ public class MateriaPlandeestudio implements Serializable {
 
     @Override
     public String toString() {
-        return "objetosNegocio.MateriaPlandeestudio[ id=" + id + " ]";
+        return "MateriaPlandeestudio{" + "id=" + id + ", materia=" + materia + ", plandeestudio=" + plandeestudio + '}';
     }
     
 }

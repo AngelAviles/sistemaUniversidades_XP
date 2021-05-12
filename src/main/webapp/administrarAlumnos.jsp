@@ -1,12 +1,17 @@
+<%-- 
+    Document   : administrarAlumnos
+    Created on : May 8, 2021, 12:01:38 PM
+    Author     : Bryan
+--%>
+
 <%@page import="jwt.JWT"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <%
     response.setHeader("Cache-Control", "no-cache");
     response.setHeader("Cache-Control", "no-store");
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
-
+    
     if (JWT.validarJWT(request, response)) {
 
     } else {
@@ -16,13 +21,12 @@
         //request.getRequestDispatcher("inicioSesion.jsp").forward(request, response);
     }
 %>
-
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-        <title>Menú Principal</title>
+        <title>Administrar Alumnos</title>
         <link href="estilos/estiloLogin.css" rel="stylesheet" type="text/css"/>
         <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     </head>
@@ -56,25 +60,16 @@
         <div class="text-center">
             <img src="img/imgInicioSesion.png" alt="iconoEscuela" width="250" height="250"/>
             <br><br>
-            <h3>Sistema para captura y administración de calificaciones</h3>
+            <h3>Administrar alumnos</h3>
             <br>
             <form action="ControlServlet" method="POST">
-                <button class="btn btn-secondary btn-lg botones-menu" type="submit" name="accion" value="administrarAlumnos"><b>Administrar alumnos</b></button>
+                <button class="btn btn-primary btn-lg botones-menu" type="submit" name="accion" value="consultarAlumnos"><b>Consultar alumnos</b></button>
+                <button class="btn btn-primary btn-lg botones-menu" type="submit" name="accion" value="importarAlumnos"><b>Importar alumnos</b></button>
+                <button class="btn btn-primary btn-lg botones-menu" type="submit" name="accion" value="importarCalificaciones"><b>Importar calificaciones</b></button>
             </form>       
             <form action="ControlServlet" method="POST">
-                <button class="btn btn-secondary btn-lg btn-block botones-menu" type="submit" name="accion" value="administrarEscuelas"><b>Administrar escuelas</b></button>
-            </form>      
-            <form action="ControlServlet" method="POST">
-                <button class="btn btn-secondary btn-lg botones-menu" type="submit" name="accion" value="administrarUsuarios"><b>Administrar usuarios</b></button>  
+                <button class="btn btn-secondary btn-lg botones-menu" type="submit" name="accion" value="regresarMenuPrincipal"><b>Menú principal</b></button>  
             </form>
-            <form action="ControlServlet" method="POST">
-                <button class="btn btn-secondary btn-lg botones-menu" type="submit" name="accion" value="administrarMaterias"><b>Administrar materias</b></button>  
-            </form>
-
-            <form action="ControlServlet" method="POST">
-                <button class="btn btn-secondary btn-lg botones-menu" type="submit" name="accion" value="administrarPE"><b>Administrar planes de estudio</b></button>  
-            </form>
-
         </div>                    
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

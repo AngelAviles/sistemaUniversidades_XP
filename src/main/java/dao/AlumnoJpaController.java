@@ -19,7 +19,9 @@ import java.util.List;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import objetosNegocio.Alumno;
+import objetosNegocio.Escuela;
 import org.eclipse.persistence.exceptions.DatabaseException;
 
 /**
@@ -207,6 +209,14 @@ public class AlumnoJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+
+    public Alumno consultarEscuelaNombre(String matricula) throws NoResultException {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM Alumno c WHERE c.matricula = :matricula");
+        consulta.setParameter("matricula", matricula);
+        Alumno alumno = (Alumno) consulta.getSingleResult();
+        return alumno;
     }
 
 }

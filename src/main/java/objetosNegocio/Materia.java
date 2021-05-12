@@ -171,7 +171,7 @@ public class Materia implements Serializable {
 
     @Override
     public String toString() {
-        return "objetosNegocio.Materia[ id=" + id + " ]";
+        return "objetosNegocio.Materia[ nombre=" + this.nombre + " ]";
     }
     
 }

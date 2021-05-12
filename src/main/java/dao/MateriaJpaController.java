@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import objetosNegocio.Materia;
 import objetosNegocio.MateriaPlandeestudio;
 import objetosNegocio.MateriasSerializacion;
@@ -376,5 +377,21 @@ public class MateriaJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public Materia consultarPorClave(String clave) throws NoResultException {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM Materia c WHERE c.clave = :clave");
+        consulta.setParameter("clave", clave);
+        Materia materiaConsultada = (Materia) consulta.getSingleResult();
+        return materiaConsultada;
+    }
+
+    public Materia consultarPorNombre(String nombre) throws NoResultException {
+        EntityManager em = getEntityManager();
+        Query consulta = em.createQuery("SELECT c FROM Materia c WHERE c.nombre = :nombre");
+        consulta.setParameter("nombre", nombre);
+        Materia materiaConsultada = (Materia) consulta.getSingleResult();
+        return materiaConsultada;
+    }
+
 }

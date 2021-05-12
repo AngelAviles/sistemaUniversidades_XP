@@ -40,9 +40,13 @@ public class Calificacion implements Serializable {
     @Column(name = "nota", nullable = false)
     private Integer nota;
 
-    
-    
     public Calificacion() {
+    }
+
+    public Calificacion(Materia materia, Alumno alumno, Integer nota) {
+        this.materia = materia;
+        this.alumno = alumno;
+        this.nota = nota;
     }
 
     public Calificacion(Integer id, Materia materia, Alumno alumno, Integer nota) {
@@ -50,10 +54,7 @@ public class Calificacion implements Serializable {
         this.materia = materia;
         this.alumno = alumno;
         this.nota = nota;
-    }
-    
-    
-    
+    }    
 
     public Integer getId() {
         return id;
@@ -111,7 +112,7 @@ public class Calificacion implements Serializable {
 
     @Override
     public String toString() {
-        return "objetosNegocio.Calificacion[ id=" + id + " ]";
+        return "Calificacion{" + "id=" + id + ", materia=" + materia + ", alumno=" + alumno + ", nota=" + nota + '}';
     }
     
 }

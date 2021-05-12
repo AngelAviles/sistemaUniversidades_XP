@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servlets;
 
 import com.opencsv.CSVReader;
@@ -36,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import objetosNegocio.Alumno;
+import objetosNegocio.Calificacion;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -51,8 +47,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author angel
  */
 @MultipartConfig
-@WebServlet(name = "importarAlumnos", urlPatterns = {"/importarAlumnos"})
-public class importarAlumnos extends HttpServlet {
+@WebServlet(name = "importarCalificaciones", urlPatterns = {"/importarCalificaciones"})
+public class importarCalificaciones extends HttpServlet {
 
     private ControlAlumno controlAlumno = new ControlAlumno();
 
@@ -118,7 +114,7 @@ public class importarAlumnos extends HttpServlet {
                 try {
                     alumnos = importarCSV(fileContent);
                 } catch (CsvValidationException ex) {
-                    Logger.getLogger(importarAlumnos.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(importarCalificaciones.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
             }
@@ -128,9 +124,9 @@ public class importarAlumnos extends HttpServlet {
 
         }
 
-        session.setAttribute("listaAlumnos", alumnos);
+        session.setAttribute("listaCalificaciones", alumnos);
         session.setAttribute("archivoInvalido", archivoInvalido);
-        response.sendRedirect("importarAlumnos.jsp");
+        response.sendRedirect("importarCalificaciones.jsp");
         //request.getRequestDispatcher("importarAlumnos.jsp").forward(request, response);
 
     }
@@ -150,19 +146,20 @@ public class importarAlumnos extends HttpServlet {
         return (dotIndex == -1) ? "" : name.substring(dotIndex + 1);
     }
 
-     private List[] importarXLSX(InputStream fileContent) throws IOException {
+    private List[] importarXLSX(InputStream fileContent) throws IOException {
         XSSFWorkbook wb = new XSSFWorkbook(fileContent);
         XSSFSheet sheet = wb.getSheetAt(0);
 
         int numFilas = sheet.getLastRowNum();
 
-        List alumnos = new ArrayList<Alumno>();
-        List alumnosCamposVacios = new ArrayList<Integer>();
-        List alumnosPreexistentes = new ArrayList<Integer>();
-        List alumnosCurpIncorrecta = new ArrayList<Integer>();
-        List alumnosNombreIncorrecto = new ArrayList<Integer>();
-        List alumnosMatriculaIncorrecta = new ArrayList<Integer>();
+        List calificaciones = new ArrayList<Calificacion>();
+        List camposVacios = new ArrayList<Integer>();
+        List calificacionesPreexistentes = new ArrayList<Integer>();
+        List matriculaIncorrecta = new ArrayList<Integer>();
+        List claveMateriaIncorrecta = new ArrayList<Integer>();
+        List calificacionesIncorrectas = new ArrayList<Integer>();
 
+        /*
         for (int a = 1; a <= numFilas; a++) {
             Row fila = sheet.getRow(a);
 
@@ -170,7 +167,7 @@ public class importarAlumnos extends HttpServlet {
                 if (fila.getCell(0) == null
                         || fila.getCell(1) == null
                         || fila.getCell(2) == null) {
-                    alumnosCamposVacios.add(new Integer(a + 1));
+                    camposVacios.add(new Integer(a + 1));
                 } else {
                     if (validarCURP(fila.getCell(2).getStringCellValue())) {
                         if (validarNombre(fila.getCell(1).getStringCellValue())) {
@@ -199,7 +196,8 @@ public class importarAlumnos extends HttpServlet {
                 }
             }
         }
-        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
+         */
+        return new List[]{calificaciones, camposVacios, calificacionesPreexistentes, matriculaIncorrecta, claveMateriaIncorrecta, calificacionesIncorrectas};
     }
 
     private List[] importarXLS(InputStream fileContent) throws IOException {
@@ -208,13 +206,13 @@ public class importarAlumnos extends HttpServlet {
 
         int numFilas = sheet.getLastRowNum();
 
-        List alumnos = new ArrayList<Alumno>();
-        List alumnosCamposVacios = new ArrayList<Integer>();
-        List alumnosPreexistentes = new ArrayList<Integer>();
-        List alumnosCurpIncorrecta = new ArrayList<Integer>();
-        List alumnosNombreIncorrecto = new ArrayList<Integer>();
-        List alumnosMatriculaIncorrecta = new ArrayList<Integer>();
-
+        List calificaciones = new ArrayList<Calificacion>();
+        List camposVacios = new ArrayList<Integer>();
+        List calificacionesPreexistentes = new ArrayList<Integer>();
+        List matriculaIncorrecta = new ArrayList<Integer>();
+        List claveMateriaIncorrecta = new ArrayList<Integer>();
+        List calificacionesIncorrectas = new ArrayList<Integer>();
+        /*
         for (int a = 1; a <= numFilas; a++) {
             Row fila = sheet.getRow(a);
             if (fila != null) {
@@ -251,7 +249,8 @@ public class importarAlumnos extends HttpServlet {
 
             }
         }
-        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
+         */
+        return new List[]{calificaciones, camposVacios, calificacionesPreexistentes, matriculaIncorrecta, claveMateriaIncorrecta, calificacionesIncorrectas};
     }
 
     private List[] importarCSV(InputStream fileContent) throws IOException, CsvValidationException {
@@ -259,15 +258,16 @@ public class importarAlumnos extends HttpServlet {
 
         String[] fila = null;
 
-        List alumnos = new ArrayList<Alumno>();
-        List alumnosCamposVacios = new ArrayList<Integer>();
-        List alumnosPreexistentes = new ArrayList<Integer>();
-        List alumnosCurpIncorrecta = new ArrayList<Integer>();
-        List alumnosNombreIncorrecto = new ArrayList<Integer>();
-        List alumnosMatriculaIncorrecta = new ArrayList<Integer>();
+        List calificaciones = new ArrayList<Calificacion>();
+        List camposVacios = new ArrayList<Integer>();
+        List calificacionesPreexistentes = new ArrayList<Integer>();
+        List matriculaIncorrecta = new ArrayList<Integer>();
+        List claveMateriaIncorrecta = new ArrayList<Integer>();
+        List calificacionesIncorrectas = new ArrayList<Integer>();
 
         int contador = 0;
 
+        /*
         while ((fila = csv.readNext()) != null) {
             if (contador >= 1) {
                 if (fila != null) {
@@ -307,27 +307,10 @@ public class importarAlumnos extends HttpServlet {
             contador++;
 
         }
-
+         */
         csv.close();
 
-        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
-    }
-
-    public boolean validarCURP(String curp) {
-        String regex
-                = "[A-Z]{1}[AEIOU]{1}[A-Z]{2}[0-9]{2}"
-                + "(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])"
-                + "[HM]{1}"
-                + "(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)"
-                + "[B-DF-HJ-NP-TV-Z]{3}"
-                + "[0-9A-Z]{1}[0-9]{1}$";
-
-        Pattern patron = Pattern.compile(regex);
-        return patron.matcher(curp).matches();
-    }
-
-    public boolean validarNombre(String str) {
-        return str.matches("^\\p{L}+[\\p{L}\\p{Z}\\p{P}]{0,}");
+        return new List[]{calificaciones, camposVacios, calificacionesPreexistentes, matriculaIncorrecta, claveMateriaIncorrecta, calificacionesIncorrectas};
     }
 
     public boolean validarMatricula(String str) {
