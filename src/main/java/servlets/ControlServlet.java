@@ -56,7 +56,7 @@ public class ControlServlet extends HttpServlet {
                 if (accion.equals("regresarMenuPrincipal")) {
                     //response.sendRedirect("menuPrincipal.jsp");
                     request.getRequestDispatcher("menuPrincipal.jsp").forward(request, response);
-                } else if (accion.equals("administrarAlumnos")) {
+                } else if (accion.equals("importarAlumnos")) {
                     //response.sendRedirect("importarAlumnos.jsp");
                     request.getRequestDispatcher("importarAlumnos.jsp").forward(request, response);
                 } else if (accion.equals("administrarEscuelas")) {
@@ -65,9 +65,18 @@ public class ControlServlet extends HttpServlet {
                 } else if (accion.equals("administrarUsuarios")) {
                     //response.sendRedirect("registroUsuario.jsp");
                     request.getRequestDispatcher("registroUsuario.jsp").forward(request, response);
+                } else if (accion.equals("consultarAlumnos")) {
+                    request.getRequestDispatcher("consultarAlumnos.jsp").forward(request, response);
+                } else if(accion.equals("administrarAlumnos")){
+                    request.getRequestDispatcher("administrarAlumnos.jsp").forward(request, response);
+                } else if(accion.equals("importarCalificaciones")){
+                    request.getRequestDispatcher("importarCalificaciones.jsp").forward(request, response);
+                } else if(accion.equals("administrarPE")){
+                    request.getRequestDispatcher("AdministrarPE.jsp").forward(request, response);
+                }
                     
                     // Envia a Servlets
-                } else if (accion.equals("importarAlumnos")) {
+                 else if (accion.equals("importarAlumnos")) {
                     response.sendRedirect("importarAlumnos");
                     //request.getRequestDispatcher("importarAlumnos").forward(request, response);
                 } else if (accion.equals("registrarEscuelas")) {

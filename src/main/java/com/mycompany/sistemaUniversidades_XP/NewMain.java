@@ -45,7 +45,11 @@ import objetosNegocio.MateriaPlandeestudio;
 import objetosNegocio.MateriasSerializacion;
 import objetosNegocio.Escuela;
 import dao.EscuelaJpaController;
+import dao.MateriaPlandeestudioJpaController;
+import dao.PlandeestudioJpaController;
+import dao.exceptions.PreexistingEntityException;
 import java.io.IOException;
+import objetosNegocio.Plandeestudio;
 
 /**
  *
@@ -55,25 +59,35 @@ public class NewMain {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.UnsupportedEncodingException
      */
     public static void main(String[] args) throws UnsupportedEncodingException {
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
-        EscuelaJpaController escuelaDAO = new EscuelaJpaController(factory);
-//
+        PlandeestudioJpaController planEstudioDAO = new PlandeestudioJpaController(factory);
+        MateriaJpaController materiaDAO = new MateriaJpaController(factory);
+        MateriaPlandeestudioJpaController relacionMateriaPlanDAO = new MateriaPlandeestudioJpaController(factory);
+        AlumnoJpaController alumnoDAO = new AlumnoJpaController(factory);
+        CalificacionJpaController calificacionDAO = new CalificacionJpaController(factory);
+
+        Alumno alumno = alumnoDAO.consultarEscuelaNombre("186203");
+        Materia materia = materiaDAO.findMateria(4);
+        System.out.println(alumno);
+        System.out.println(materia);
+
+        Calificacion calificacion = new Calificacion(materia, alumno, 10);
+        calificacionDAO.create(calificacion);
+        
+        
+//        Plandeestudio planEstudio = planEstudioDAO.findPlandeestudio(1);
+//        Materia materia = materiaDAO.findMateria(4); 
+//        MateriaPlandeestudio listaMateriaPlan = new  MateriaPlandeestudio(materia, planEstudio);
+//        relacionMateriaPlanDAO.create(listaMateriaPlan);
+//        AlumnoJpaController alumnoDAO = new AlumnoJpaController(factory);
 //        Escuela escuelaPrueba = escuelaDAO.consultarEscuelaNombre("Conalep");
 //        byte[] logotipoNuevo = escuelaPrueba.getLogotipo();
-//        
-//        System.out.println(logotipoNuevo);
-        
-        String clave = "14565";
-        String nombre = "Conalep";
-        File fi = new File("F:/Descargas/logoCobach.jpg");
-        
-        
-        System.out.println(fi.getAbsolutePath());
-        
-        
+//
+//        System.out.println(logotipoNuevo);     
 //        byte[] logotipoConvertido;
 //        try {
 //            logotipoConvertido = Files.readAllBytes(fi.toPath());
@@ -82,7 +96,6 @@ public class NewMain {
 //        } catch (IOException ex) {
 //            System.out.println("hubo error");
 //        }
-
 //        // Alumnos
 //        Alumno alumno1 = new Alumno(5, "0001", "hola", "fsfsdfsf", new ArrayList<Calificacion>());
 //        Alumno alumno2 = new Alumno(6, "0002", "hola", "dvvvdvdvdv", new ArrayList<Calificacion>());
@@ -91,7 +104,7 @@ public class NewMain {
 //        Alumno alumno5 = new Alumno(3, "0005", "quinto", "fsdfsdfsdfjsdfsdif", new ArrayList<Calificacion>());
 //        Alumno alumno6 = new Alumno(6, "0006", "sexto", "666666", new ArrayList<Calificacion>());
 //        Alumno alumno7 = new Alumno(3, "0007", "septimo", "sss", new ArrayList<Calificacion>());
-//        
+//
 //
 //        // Materias
 //        Materia materia1 = new Materia(1, "ffsdf", "algebrea", new ArrayList<Calificacion>(), new ArrayList<MateriaPlandeestudio>(), new ArrayList<MateriasSerializacion>(), new ArrayList<MateriasSerializacion>());
@@ -112,7 +125,7 @@ public class NewMain {
 //        Calificacion cal12 = new Calificacion(6, materia2, alumno6, 8);
 //        Calificacion cal13 = new Calificacion(5, materia1, alumno7, 6);
 //        Calificacion cal14 = new Calificacion(6, materia2, alumno7, 6);
-//        
+//
 //
 //        EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
 //        
@@ -155,7 +168,7 @@ public class NewMain {
 //        } catch (SQLException ex) {
 //            Logger.getLogger(NewMain.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-//        
+//
 //        
 //        try {
 //            inputStream = new FileInputStream("src/main/java/reportes/ReporteAlumno.jrxml");

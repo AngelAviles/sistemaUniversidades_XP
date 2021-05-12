@@ -57,6 +57,11 @@ public class Plandeestudio implements Serializable {
         this.materias = new ArrayList<>();
     }
 
+    public Plandeestudio(String nombre, List<MateriaPlandeestudio> materias) {
+        this.nombre = nombre;
+        this.materias = materias;
+    }
+    
     public Plandeestudio(Integer id, String nombre, List<MateriaPlandeestudio> materias, List<EscuelaPlandeestudio> escuela) {
         this.id = id;
         this.nombre = nombre;
@@ -123,7 +128,9 @@ public class Plandeestudio implements Serializable {
 
     @Override
     public String toString() {
-        return "objetosNegocio.Plandeestudio[ id=" + id + " ]";
+        return "Plandeestudio{" + "id=" + id + ", nombre=" + nombre + ", materias=" + materias + ", escuela=" + escuela + '}';
     }
+
+
     
 }
