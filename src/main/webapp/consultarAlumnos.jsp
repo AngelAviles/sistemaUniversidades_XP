@@ -60,6 +60,7 @@
                             <th scope="col">Matricula</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">CURP</th>
+                            <th scope="col">Plan de estudio</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,6 +70,7 @@
                                         + "<td scope=\"row\">" + listaAlumnos.get(i).getCurp() + "</td>"
                                         + "<td>" + listaAlumnos.get(i).getNombre() + "</td>"
                                         + "<td>" + listaAlumnos.get(i).getMatricula() + "</td>"
+                                        + "<td>" + listaAlumnos.get(i).getNumeroPlan() + "</td>"
                                         + "</tr>"
                                 );
                             }

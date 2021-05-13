@@ -42,13 +42,14 @@ public class Alumno implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "alumno")
     private List<Calificacion> calificaciones;
     
+    @Column(name = "numPlan", nullable = false)
+    private Integer numeroPlan;
+    
     public void addCalificacion(Calificacion calificacion) {
         calificacion.setAlumno(this);
         this.calificaciones.add(calificacion);
     }
-
-    
-    
+  
     
     public Alumno() {
         this.calificaciones = new ArrayList<>();
@@ -66,6 +67,23 @@ public class Alumno implements Serializable {
         this.curp = curp;
         this.calificaciones = calificaciones;
     }
+
+    public Alumno(String matricula, String nombre, String curp, List<Calificacion> calificaciones, Integer numeroPlan) {
+        this.matricula = matricula;
+        this.nombre = nombre;
+        this.curp = curp;
+        this.calificaciones = calificaciones;
+        this.numeroPlan = numeroPlan;
+    }
+
+    public Alumno(Integer id, String matricula, String nombre, String curp, List<Calificacion> calificaciones, Integer numeroPlan) {
+        this.id = id;
+        this.matricula = matricula;
+        this.nombre = nombre;
+        this.curp = curp;
+        this.calificaciones = calificaciones;
+        this.numeroPlan = numeroPlan;
+    }
     
     public Alumno(Integer id, String matricula, String nombre, String curp, List<Calificacion> calificaciones) {
         this.id = id;
@@ -74,8 +92,6 @@ public class Alumno implements Serializable {
         this.curp = curp;
         this.calificaciones = calificaciones;
     }
-
-    
     
 
     public Integer getId() {
@@ -118,9 +134,13 @@ public class Alumno implements Serializable {
         this.calificaciones = calificaciones;
     }
 
-    
-    
-    
+    public Integer getNumeroPlan() {
+        return numeroPlan;
+    }
+
+    public void setNumeroPlan(Integer numeroPlan) {
+        this.numeroPlan = numeroPlan;
+    }  
 
     @Override
     public int hashCode() {

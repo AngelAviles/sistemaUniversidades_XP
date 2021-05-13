@@ -86,6 +86,7 @@
                                                 <td>    
                                                     <div class="col-sm-auto">
                                                         <select class="form-select" name="sem1mat1" onclick="">
+                                                            <option disabled="disabled" selected="true" value="" required>Seleccione materia</option> 
                                                             <%
                                                                 for (int i = 0; i < listaMaterias.size(); i++) {
                                                                     out.print("<option value=\"" + listaMaterias.get(i).getNombre() + "\">" + listaMaterias.get(i).getNombre() + "</option>");

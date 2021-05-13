@@ -45,6 +45,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import control.ControlPlanEstudio;
+import objetosNegocio.Plandeestudio;
 
 /**
  *
@@ -55,6 +57,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class importarAlumnos extends HttpServlet {
 
     private ControlAlumno controlAlumno = new ControlAlumno();
+    private ControlPlanEstudio controlPlan = new ControlPlanEstudio();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -150,7 +153,7 @@ public class importarAlumnos extends HttpServlet {
         return (dotIndex == -1) ? "" : name.substring(dotIndex + 1);
     }
 
-     private List[] importarXLSX(InputStream fileContent) throws IOException {
+private List[] importarXLSX(InputStream fileContent) throws IOException {
         XSSFWorkbook wb = new XSSFWorkbook(fileContent);
         XSSFSheet sheet = wb.getSheetAt(0);
 
@@ -162,6 +165,10 @@ public class importarAlumnos extends HttpServlet {
         List alumnosCurpIncorrecta = new ArrayList<Integer>();
         List alumnosNombreIncorrecto = new ArrayList<Integer>();
         List alumnosMatriculaIncorrecta = new ArrayList<Integer>();
+        List alumnosPlanIncorrecto = new ArrayList<Integer>();
+
+        List<Plandeestudio> listaPlanesEstudio = new ArrayList<>();
+        listaPlanesEstudio = controlPlan.obtenerPlanes();
 
         for (int a = 1; a <= numFilas; a++) {
             Row fila = sheet.getRow(a);
@@ -175,17 +182,29 @@ public class importarAlumnos extends HttpServlet {
                     if (validarCURP(fila.getCell(2).getStringCellValue())) {
                         if (validarNombre(fila.getCell(1).getStringCellValue())) {
                             if (validarMatricula(fila.getCell(0).getStringCellValue())) {
-                                Alumno alumno = new Alumno(null,
-                                        fila.getCell(0).getStringCellValue(),
-                                        fila.getCell(1).getStringCellValue(),
-                                        fila.getCell(2).getStringCellValue(),
-                                        null);
-                                try {
-                                    controlAlumno.agregarAlumno(alumno);
-                                    alumnos.add(alumno);
-                                } catch (PreexistingEntityException ex) {
-                                    alumnosPreexistentes.add(new Integer(a + 1));
+                                boolean aux = false;
+                                for (int i = 0; i < listaPlanesEstudio.size(); i++) {
+                                    if (listaPlanesEstudio.get(i).getId() == Integer.parseInt(fila.getCell(3).getStringCellValue())) {
+                                        aux = true;
+                                    }
                                 }
+                                if (aux) {
+
+                                    Alumno alumno = new Alumno(null,
+                                            fila.getCell(0).getStringCellValue(),
+                                            fila.getCell(1).getStringCellValue(),
+                                            fila.getCell(2).getStringCellValue(),
+                                            null, Integer.parseInt(fila.getCell(3).getStringCellValue()));
+                                    try {
+                                        controlAlumno.agregarAlumno(alumno);
+                                        alumnos.add(alumno);
+                                    } catch (PreexistingEntityException ex) {
+                                        alumnosPreexistentes.add(new Integer(a + 1));
+                                    }
+                                } else {
+                                    alumnosPlanIncorrecto.add(new Integer(a + 1));
+                                }
+
                             } else {
                                 alumnosMatriculaIncorrecta.add(new Integer(a + 1));
                             }
@@ -199,7 +218,7 @@ public class importarAlumnos extends HttpServlet {
                 }
             }
         }
-        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
+        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta, alumnosPlanIncorrecto};
     }
 
     private List[] importarXLS(InputStream fileContent) throws IOException {
@@ -214,6 +233,10 @@ public class importarAlumnos extends HttpServlet {
         List alumnosCurpIncorrecta = new ArrayList<Integer>();
         List alumnosNombreIncorrecto = new ArrayList<Integer>();
         List alumnosMatriculaIncorrecta = new ArrayList<Integer>();
+        List alumnosPlanIncorrecto = new ArrayList<Integer>();
+
+        List<Plandeestudio> listaPlanesEstudio = new ArrayList<>();
+        listaPlanesEstudio = controlPlan.obtenerPlanes();
 
         for (int a = 1; a <= numFilas; a++) {
             Row fila = sheet.getRow(a);
@@ -226,16 +249,27 @@ public class importarAlumnos extends HttpServlet {
                     if (validarCURP(fila.getCell(2).getStringCellValue())) {
                         if (validarNombre(fila.getCell(1).getStringCellValue())) {
                             if (validarMatricula(fila.getCell(0).getStringCellValue())) {
-                                Alumno alumno = new Alumno(null,
-                                        fila.getCell(0).getStringCellValue(),
-                                        fila.getCell(1).getStringCellValue(),
-                                        fila.getCell(2).getStringCellValue(),
-                                        null);
-                                try {
-                                    controlAlumno.agregarAlumno(alumno);
-                                    alumnos.add(alumno);
-                                } catch (PreexistingEntityException ex) {
-                                    alumnosPreexistentes.add(new Integer(a + 1));
+                                boolean aux = false;
+                                for (int i = 0; i < listaPlanesEstudio.size(); i++) {
+                                    if (listaPlanesEstudio.get(i).getId() == Integer.parseInt(fila.getCell(3).getStringCellValue())) {
+                                        aux = true;
+                                    }
+                                }
+                                if (aux) {
+
+                                    Alumno alumno = new Alumno(null,
+                                            fila.getCell(0).getStringCellValue(),
+                                            fila.getCell(1).getStringCellValue(),
+                                            fila.getCell(2).getStringCellValue(),
+                                            null, Integer.parseInt(fila.getCell(3).getStringCellValue()));
+                                    try {
+                                        controlAlumno.agregarAlumno(alumno);
+                                        alumnos.add(alumno);
+                                    } catch (PreexistingEntityException ex) {
+                                        alumnosPreexistentes.add(new Integer(a + 1));
+                                    }
+                                } else {
+                                    alumnosPlanIncorrecto.add(new Integer(a + 1));
                                 }
                             } else {
                                 alumnosMatriculaIncorrecta.add(new Integer(a + 1));
@@ -251,7 +285,7 @@ public class importarAlumnos extends HttpServlet {
 
             }
         }
-        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
+        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta, alumnosPlanIncorrecto};
     }
 
     private List[] importarCSV(InputStream fileContent) throws IOException, CsvValidationException {
@@ -265,7 +299,10 @@ public class importarAlumnos extends HttpServlet {
         List alumnosCurpIncorrecta = new ArrayList<Integer>();
         List alumnosNombreIncorrecto = new ArrayList<Integer>();
         List alumnosMatriculaIncorrecta = new ArrayList<Integer>();
+        List alumnosPlanIncorrecto = new ArrayList<Integer>();
 
+        List<Plandeestudio> listaPlanesEstudio = new ArrayList<>();
+        listaPlanesEstudio = controlPlan.obtenerPlanes();
         int contador = 0;
 
         while ((fila = csv.readNext()) != null) {
@@ -279,16 +316,27 @@ public class importarAlumnos extends HttpServlet {
                         if (validarCURP(fila[2])) {
                             if (validarNombre(fila[1])) {
                                 if (validarMatricula(fila[0])) {
-                                    Alumno alumno = new Alumno(null,
-                                            fila[0],
-                                            fila[1],
-                                            fila[2],
-                                            null);
-                                    try {
-                                        controlAlumno.agregarAlumno(alumno);
-                                        alumnos.add(alumno);
-                                    } catch (PreexistingEntityException ex) {
-                                        alumnosPreexistentes.add(new Integer(contador + 1));
+                                    boolean aux = false;
+                                    for (int i = 0; i < listaPlanesEstudio.size(); i++) {
+                                        if (listaPlanesEstudio.get(i).getId() == Integer.parseInt(fila[3])) {
+                                            aux = true;
+                                        }
+                                    }
+                                    if (aux) {
+
+                                        Alumno alumno = new Alumno(null,
+                                                fila[0],
+                                                fila[1],
+                                                fila[2],
+                                                null, Integer.parseInt(fila[3]));
+                                        try {
+                                            controlAlumno.agregarAlumno(alumno);
+                                            alumnos.add(alumno);
+                                        } catch (PreexistingEntityException ex) {
+                                            alumnosPreexistentes.add(new Integer(contador + 1));
+                                        }
+                                    } else {
+                                        alumnosPlanIncorrecto.add(new Integer(contador + 1));
                                     }
                                 } else {
                                     alumnosMatriculaIncorrecta.add(new Integer(contador + 1));
@@ -310,7 +358,7 @@ public class importarAlumnos extends HttpServlet {
 
         csv.close();
 
-        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta};
+        return new List[]{alumnos, alumnosCamposVacios, alumnosPreexistentes, alumnosCurpIncorrecta, alumnosNombreIncorrecto, alumnosMatriculaIncorrecta, alumnosPlanIncorrecto};
     }
 
     public boolean validarCURP(String curp) {
