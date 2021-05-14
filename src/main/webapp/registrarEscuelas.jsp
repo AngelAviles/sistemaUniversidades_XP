@@ -60,10 +60,10 @@
                 <div class="row justify-content-center">
                     <div class="col-auto">
                         <div class="border border-black border-3 mb-3">
-
-
+                            
+                            
                             <div class="m-3" class="form-group">
-                                <form action="registrarEscuelas" method="POST" class="form" enctype="multipart/form-data">
+                                <form action="registrarEscuelas" method="POST" class="form">
                                     <p>
                                         <label class="form-label">Clave</label>
                                         <input class="form-control form-control-sm" type="text" name="clave" required="">

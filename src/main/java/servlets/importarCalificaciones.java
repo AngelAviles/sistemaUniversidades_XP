@@ -191,9 +191,8 @@ public class importarCalificaciones extends HttpServlet {
 
                 } else {
                     //Cambiar encabezado a fila de alumnos
-                    a++;
-                    if (a > numFilas) {
-                        a = numFilas;
+                    if (a == 0) {
+                        a++;
                     }
                     fila = sheet.getRow(a);
 
@@ -202,30 +201,41 @@ public class importarCalificaciones extends HttpServlet {
                     for (int i = 0; i < listaAlumnos.size(); i++) {
                         if (fila.getCell(0).getStringCellValue().equals(listaAlumnos.get(i).getMatricula())) {
                             alumno = listaAlumnos.get(i);
+                            break;
                         }
                     }
                     if (alumno != null) {
-                        fila = sheet.getRow(0);
+
                         //Fila de claves de materias
-                        for (int j = 1; j < 8; j++) {
+                        for (int j = 1; j < 9; j++) {
+                            fila = sheet.getRow(0);
                             for (int i = 0; i < listaMaterias.size(); i++) {
-                                if (fila.getCell(j).getStringCellValue().equals(listaMaterias.get(i).getClave())) {
+                                String filaCelda = fila.getCell(j).getStringCellValue();
+                                String materiaLista = listaMaterias.get(i).getClave();
+                                if (filaCelda.equals(materiaLista)) {
                                     fila = sheet.getRow(a);
                                     materia = listaMaterias.get(i);
 
-                                    //ExpresiÃ³n regular de la calificacion 
+                                    //Expresion regular de la calificacion 
                                     if (validarCalificacion(fila.getCell(j).getStringCellValue())) {
                                         Calificacion calificacion = new Calificacion(null, materia, alumno, Integer.parseInt(fila.getCell(j).getStringCellValue()));
 
                                         try {
                                             controlCalificaciones.agregarCalificacion(calificacion);
                                             calificaciones.add(calificacion);
+                                            break;
                                         } catch (PreexistingEntityException e) {
                                             calificacionesPreexistentes.add(new Integer(a + 1));
                                         }
 
                                     } else {
                                         calificacionesIncorrectas.add(new Integer(a + 1));
+                                    }
+                                } else if (i == listaMaterias.size()) {
+                                    if (claveMateriaIncorrecta.contains(j)) {
+                                        break;
+                                    } else {
+                                        claveMateriaIncorrecta.add(j);
                                     }
                                 }
 

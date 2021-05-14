@@ -84,30 +84,6 @@
                         <div class="border border-black border-3 mb-3">
                             <form action="importarCalificaciones" method="post" enctype="multipart/form-data">
                                 <div class="m-3">
-                                    <div class="mb-3 row">
-                                        <label class="col-sm-4 col-form-label">Plan de estudio:</label>
-                                        <div class="col-sm-8">
-                                            <select class="form-select" name="escuela">                                           
-                                                <%                              
-                                                     for (int i = listaPlanesEstudio.size()-1; i >= 0; i--) {
-                                                          out.print("<option value=\"" + listaPlanesEstudio.get(i).getNombre() + "\">" + listaPlanesEstudio.get(i).getNombre() + "</option>");
-                                                     }
-                                                %>
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                    <div class="mb-3 row">
-                                        <label class="col-sm-4 col-form-label">Semestre:</label>
-                                        <div class="col-sm-3">
-                                            <select class="form-select" name="semestre">
-                                                <%       for (int i = 1; i < 7; i++) {
-                                                        out.print("<option value=\"" + i + "\">" + i + "</option>");
-                                                    }
-                                                %>
-                                            </select>
-                                        </div>
-                                    </div>
                                     <label for="formFileSm" class="form-label">Archivo Excel o
                                         CSV</label>
                                     <div class="row m-auto">
