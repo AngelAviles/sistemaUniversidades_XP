@@ -32,6 +32,7 @@ public class ControlServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.setHeader("Pragma", "no-cache");
@@ -92,7 +93,6 @@ public class ControlServlet extends HttpServlet {
                     //response.sendRedirect("importarUsuario");
                     request.getRequestDispatcher("CrearMaterias").forward(request, response);
 
-                    request.getRequestDispatcher("registrarUsuario").forward(request, response);
                 } else if (accion.equals("crearPlan")) {
                     //response.sendRedirect("importarUsuario");
                     request.getRequestDispatcher("administrarPE").forward(request, response);

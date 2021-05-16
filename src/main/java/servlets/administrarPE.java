@@ -81,6 +81,9 @@ public class administrarPE extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
         MateriaPlandeestudioJpaController relacionMateriaPlanDAO = new MateriaPlandeestudioJpaController(factory);
