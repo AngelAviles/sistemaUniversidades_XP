@@ -72,11 +72,15 @@ public class NewMain {
         
         CalificacionJpaController calificacionDAO = new CalificacionJpaController(factory);
 
+
+        //System.out.println(planEstudioDAO.consultarPorNombre("PlanPruebas"));
+
         List <Calificacion> listacalif = calificacionDAO.findCalificacionEntities();
         System.out.println("\n\n" + listacalif.size());
         for (Calificacion calificacion : listacalif) {
             System.out.println(calificacion);
         }
+
         
         
 //        Plandeestudio planEstudio = planEstudioDAO.findPlandeestudio(1);

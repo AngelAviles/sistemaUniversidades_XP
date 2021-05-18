@@ -81,6 +81,11 @@ public class administrarPE extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        
+        String nomPlan = request.getParameter("txtNombrePlan");
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
         MateriaPlandeestudioJpaController relacionMateriaPlanDAO = new MateriaPlandeestudioJpaController(factory);
@@ -93,13 +98,19 @@ public class administrarPE extends HttpServlet {
         Plandeestudio planCreado = planDAO.consultarPorNombre(planNuevo.getNombre());
         ArrayList<MateriaPlandeestudio> listaRelProductoVenta = new ArrayList<>();
 
-        for (int i = 1; i < 7; i++) {
-            for (int j = 1; j < 9; j++) {
-                Materia materia = materiaDAO.consultarPorNombre(request.getParameter("sem" + i + "mat" + j));
-                MateriaPlandeestudio materiaPlan = new MateriaPlandeestudio(materia, planCreado);
-                relacionMateriaPlanDAO.create(materiaPlan);
+        try{
+            Plandeestudio compararPlan = planDAO.consultarPorNombre(nomPlan);
+            request.setAttribute("siErrorPlan", "¡Ya existe un Plan de estudio registrado con el mismo nombre!");
+            request.getRequestDispatcher("AdministrarPE.jsp").forward(request, response);
+        }catch (NoResultException ex){
+            for (int i = 1; i < 7; i++) {
+                for (int j = 1; j < 9; j++) {
+                    Materia materia = materiaDAO.consultarPorNombre(request.getParameter("sem" + i + "mat" + j));
+                    MateriaPlandeestudio materiaPlan = new MateriaPlandeestudio(materia, planCreado);
+                    relacionMateriaPlanDAO.create(materiaPlan);
+                }
             }
-        }
+        }        
 
         request.getRequestDispatcher("AdministrarPE.jsp").forward(request, response);
     }

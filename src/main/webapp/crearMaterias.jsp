@@ -65,7 +65,7 @@
             <div class="d-flex flex-row">
                 <div class="d-flex row align-items-center justify-content-center w-100">
                     <div class="col-sm-5">
-                        <form action="CrearMaterias" method="POST">
+                        <form action="ControlServlet" method="POST">
                             <div class="border border-black border-3 mb-3">
                                 <div class="m-3">
                                     <label for="claveMateria" class="form-label">Clave</label>
