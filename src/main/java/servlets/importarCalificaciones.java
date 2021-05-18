@@ -56,6 +56,8 @@ public class importarCalificaciones extends HttpServlet {
     private ControlAlumno controlAlumno = new ControlAlumno();
     private ControlCalificaciones controlCalificaciones = new ControlCalificaciones();
     private ControlMaterias controlMaterias = new ControlMaterias();
+    public static List<String> listaDatosTabla = new ArrayList<>();
+    public static int alumnosRegistrados = 0;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -105,19 +107,19 @@ public class importarCalificaciones extends HttpServlet {
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
         InputStream fileContent = filePart.getInputStream();
 
-        List[] alumnos = null;
+        List[] calificaciones = null;
         Boolean archivoInvalido = false;
 
         switch (getFileExtension(fileName)) {
             case "xlsx":
-                alumnos = importarXLSX(fileContent);
+                calificaciones = importarXLSX(fileContent);
                 break;
             case "xls":
-                alumnos = importarXLS(fileContent);
+                calificaciones = importarXLS(fileContent);
                 break;
             case "csv": {
                 try {
-                    alumnos = importarCSV(fileContent);
+                    calificaciones = importarCSV(fileContent);
                 } catch (CsvValidationException ex) {
                     Logger.getLogger(importarCalificaciones.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -129,7 +131,7 @@ public class importarCalificaciones extends HttpServlet {
 
         }
 
-        session.setAttribute("listaCalificaciones", alumnos);
+        session.setAttribute("listaCalificaciones", calificaciones);
         session.setAttribute("archivoInvalido", archivoInvalido);
         response.sendRedirect("importarCalificaciones.jsp");
         //request.getRequestDispatcher("importarAlumnos.jsp").forward(request, response);
@@ -162,6 +164,7 @@ public class importarCalificaciones extends HttpServlet {
         List alumnoIncorrecto = new ArrayList<Integer>();
         List claveMateriaIncorrecta = new ArrayList<Integer>();
         List calificacionesIncorrectas = new ArrayList<Integer>();
+        List camposVaciosMateria = new ArrayList<Integer>();
 
         //Comparar datos de materias para saber si se encuentran activas
         List<Materia> listaMaterias = new ArrayList<>();
@@ -171,80 +174,111 @@ public class importarCalificaciones extends HttpServlet {
         List<Alumno> listaAlumnos = new ArrayList<>();
         listaAlumnos = controlAlumno.obtenerAlumnos();
 
+        //Lista auxiliar solo para imprimir datos en la tabla
+        //Objetos a guardar
+        Alumno alumno = new Alumno();
+        Materia materia = new Materia();
+        Calificacion calificacion = new Calificacion();
+        Boolean continuarAux = false;
+
         int numFilas = sheet.getLastRowNum();
-        for (int a = 0; a <= numFilas; a++) {
+        for (int a = 1; a <= numFilas; a++) {
 
             //Fila en la que te encuentras
             Row fila = sheet.getRow(a);
 
             if (fila != null) {
-                if (fila.getCell(0) == null
-                        || fila.getCell(1) == null
-                        || fila.getCell(2) == null
-                        || fila.getCell(3) == null
-                        || fila.getCell(4) == null
-                        || fila.getCell(5) == null
-                        || fila.getCell(6) == null
-                        || fila.getCell(7) == null
-                        || fila.getCell(8) == null) {
-                    camposVacios.add(new Integer(a + 1));
+                String celdaAux = "";
+                try {
+                    celdaAux = fila.getCell(0).getStringCellValue();
+                } catch (Exception e) {
+                    camposVacios.add(a + 1);
+                    continue;
+                }
 
-                } else {
-                    //Cambiar encabezado a fila de alumnos
-                    if (a == 0) {
-                        a++;
+                for (int i = 0; i < listaAlumnos.size(); i++) {
+                    if (fila.getCell(0).getStringCellValue().equals(listaAlumnos.get(i).getMatricula())) {
+                        alumno = listaAlumnos.get(i);
+                        listaDatosTabla.add(alumno.getMatricula());
+                        alumnosRegistrados++;
+                        continuarAux = true;
+                        break;
                     }
-                    fila = sheet.getRow(a);
+                }
 
-                    Alumno alumno = new Alumno();
-                    Materia materia = new Materia();
-                    for (int i = 0; i < listaAlumnos.size(); i++) {
-                        if (fila.getCell(0).getStringCellValue().equals(listaAlumnos.get(i).getMatricula())) {
-                            alumno = listaAlumnos.get(i);
-                            break;
-                        }
-                    }
-                    if (alumno != null) {
+                if (continuarAux) {
+                    //Fila de claves de materias
+                    for (int j = 1; j < 9; j++) {
 
-                        //Fila de claves de materias
-                        for (int j = 1; j < 9; j++) {
+                        for (int i = 0; i < listaMaterias.size(); i++) {
                             fila = sheet.getRow(0);
-                            for (int i = 0; i < listaMaterias.size(); i++) {
+                            String celdaActual = fila.getCell(j).getStringCellValue();
+                            if (!(celdaActual.equals(""))) {
+
                                 String filaCelda = fila.getCell(j).getStringCellValue();
                                 String materiaLista = listaMaterias.get(i).getClave();
+
                                 if (filaCelda.equals(materiaLista)) {
                                     fila = sheet.getRow(a);
                                     materia = listaMaterias.get(i);
 
-                                    //Expresion regular de la calificacion 
-                                    if (validarCalificacion(fila.getCell(j).getStringCellValue())) {
-                                        Calificacion calificacion = new Calificacion(null, materia, alumno, Integer.parseInt(fila.getCell(j).getStringCellValue()));
+                                    int nota = 0;
+                                    String celdaCalificacion = "";
+                                    try {
+                                        celdaCalificacion = fila.getCell(j).getStringCellValue();
+                                    } catch (Exception e) {
+                                        listaDatosTabla.add("-1");
+                                        break;
+                                    }
 
-                                        try {
-                                            controlCalificaciones.agregarCalificacion(calificacion);
-                                            calificaciones.add(calificacion);
-                                            break;
-                                        } catch (PreexistingEntityException e) {
-                                            calificacionesPreexistentes.add(new Integer(a + 1));
-                                        }
+                                    if (celdaCalificacion.equals("")) {
 
                                     } else {
-                                        calificacionesIncorrectas.add(new Integer(a + 1));
+                                        //Expresion regular de la calificacion 
+                                        if (validarCalificacion(fila.getCell(j).getStringCellValue())) {
+                                            nota = Integer.parseInt(fila.getCell(j).getStringCellValue());
+
+                                            calificacion = new Calificacion(null, materia, alumno, nota);
+
+                                            try {
+                                                listaDatosTabla.add(nota + "");
+                                                controlCalificaciones.agregarCalificacion(calificacion);
+                                                calificaciones.add(calificacion);
+                                                break;
+                                            } catch (PreexistingEntityException e) {
+                                                calificacionesPreexistentes.add(a + 1);
+                                            }
+
+                                        } else {
+                                            calificacionesIncorrectas.add(a + 1);
+                                            listaDatosTabla.add("-1");
+                                            break;
+                                        }
                                     }
-                                } else if (i == listaMaterias.size()) {
-                                    if (claveMateriaIncorrecta.contains(j)) {
+                                } else if (i == listaMaterias.size()-1) {
+                                    if (claveMateriaIncorrecta.contains(j+1)) {
+                                        listaDatosTabla.add("-1");
                                         break;
                                     } else {
-                                        claveMateriaIncorrecta.add(j);
+                                        claveMateriaIncorrecta.add(j+1);
+                                        listaDatosTabla.add("-1");
                                     }
                                 }
 
+                            } else {
+                                //  EL PROBLEMA ES QUE SE METE DOS VECES
+                                if (camposVaciosMateria.contains(j+1)) {
+                                    listaDatosTabla.add("-1");
+                                    break;
+                                } else {
+                                    camposVaciosMateria.add(j+1);
+                                }
                             }
                         }
-
-                    } else {
-                        alumnoIncorrecto.add(new Integer(a + 1));
                     }
+
+                } else {
+                    alumnoIncorrecto.add(a + 1);
                 }
 
                 //Si la primera fila no contiene valores, no se necesita seguir con el procedimiento
@@ -254,9 +288,114 @@ public class importarCalificaciones extends HttpServlet {
             }
         }
 
-        return new List[]{calificaciones, camposVacios, calificacionesPreexistentes, alumnoIncorrecto, claveMateriaIncorrecta, calificacionesIncorrectas};
+        return new List[]{calificaciones, camposVacios, calificacionesPreexistentes, alumnoIncorrecto, claveMateriaIncorrecta, calificacionesIncorrectas, camposVaciosMateria};
     }
 
+//    private List[] importarXLSX(InputStream fileContent) throws IOException {
+//        XSSFWorkbook wb = new XSSFWorkbook(fileContent);
+//        XSSFSheet sheet = wb.getSheetAt(0);
+//
+//        //Listas a rellenar
+//        List calificaciones = new ArrayList<Calificacion>();
+//        List camposVacios = new ArrayList<Integer>();
+//        List calificacionesPreexistentes = new ArrayList<Integer>();
+//        List alumnoIncorrecto = new ArrayList<Integer>();
+//        List claveMateriaIncorrecta = new ArrayList<Integer>();
+//        List calificacionesIncorrectas = new ArrayList<Integer>();
+//
+//        //Comparar datos de materias para saber si se encuentran activas
+//        List<Materia> listaMaterias = new ArrayList<>();
+//        listaMaterias = controlMaterias.obtenerMaterias();
+//
+//        //Comparar datos de alumnos para verificar al alumno
+//        List<Alumno> listaAlumnos = new ArrayList<>();
+//        listaAlumnos = controlAlumno.obtenerAlumnos();
+//
+//        int numFilas = sheet.getLastRowNum();
+//        for (int a = 0; a <= numFilas; a++) {
+//
+//            //Fila en la que te encuentras
+//            Row fila = sheet.getRow(a);
+//
+//            if (fila != null) {
+//                if (fila.getCell(0) == null
+//                        || fila.getCell(1) == null
+//                        || fila.getCell(2) == null
+//                        || fila.getCell(3) == null
+//                        || fila.getCell(4) == null
+//                        || fila.getCell(5) == null
+//                        || fila.getCell(6) == null
+//                        || fila.getCell(7) == null
+//                        || fila.getCell(8) == null) {
+//                    camposVacios.add(new Integer(a + 1));
+//
+//                } else {
+//                    //Cambiar encabezado a fila de alumnos
+//                    if (a == 0) {
+//                        a++;
+//                    }
+//                    fila = sheet.getRow(a);
+//
+//                    Alumno alumno = new Alumno();
+//                    Materia materia = new Materia();
+//                    for (int i = 0; i < listaAlumnos.size(); i++) {
+//                        if (fila.getCell(0).getStringCellValue().equals(listaAlumnos.get(i).getMatricula())) {
+//                            alumno = listaAlumnos.get(i);
+//                            break;
+//                        }
+//                    }
+//                    if (alumno != null) {
+//
+//                        //Fila de claves de materias
+//                        for (int j = 1; j < 9; j++) {
+//                            fila = sheet.getRow(0);
+//                            for (int i = 0; i < listaMaterias.size(); i++) {
+//                                String filaCelda = fila.getCell(j).getStringCellValue();
+//                                String materiaLista = listaMaterias.get(i).getClave();
+//                                if (filaCelda.equals(materiaLista)) {
+//                                    fila = sheet.getRow(a);
+//                                    materia = listaMaterias.get(i);
+//
+//                                    //Expresion regular de la calificacion 
+//                                    if (validarCalificacion(fila.getCell(j).getStringCellValue())) {
+//                                        Calificacion calificacion = new Calificacion(null, materia, alumno, Integer.parseInt(fila.getCell(j).getStringCellValue()));
+//
+//                                        try {
+//                                            controlCalificaciones.agregarCalificacion(calificacion);
+//                                            calificaciones.add(calificacion);
+//                                            break;
+//                                        } catch (PreexistingEntityException e) {
+//                                            calificacionesPreexistentes.add(new Integer(a + 1));
+//                                        }
+//
+//                                    } else {
+//                                        calificacionesIncorrectas.add(new Integer(a + 1));
+//                                    }
+//                                } else if (i == listaMaterias.size()) {
+//                                    if (claveMateriaIncorrecta.contains(j)) {
+//                                        break;
+//                                    } else {
+//                                        claveMateriaIncorrecta.add(j);
+//                                    }
+//                                }
+//
+//                            }
+//                        }
+//
+//                    } else {
+//                        alumnoIncorrecto.add(new Integer(a + 1));
+//                    }
+//                }
+//
+//                //Si la primera fila no contiene valores, no se necesita seguir con el procedimiento
+//            } else {
+//                break;
+//
+//            }
+//        }
+//
+//        return new List[]{calificaciones, camposVacios, calificacionesPreexistentes, alumnoIncorrecto, claveMateriaIncorrecta, calificacionesIncorrectas};
+//    }
     private List[] importarXLS(InputStream fileContent) throws IOException {
         Workbook wb = new HSSFWorkbook(fileContent);
         Sheet sheet = wb.getSheetAt(0);

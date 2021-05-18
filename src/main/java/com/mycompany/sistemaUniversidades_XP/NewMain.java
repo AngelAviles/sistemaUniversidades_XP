@@ -49,6 +49,7 @@ import dao.MateriaPlandeestudioJpaController;
 import dao.PlandeestudioJpaController;
 import dao.exceptions.PreexistingEntityException;
 import java.io.IOException;
+import java.util.List;
 import objetosNegocio.Plandeestudio;
 
 /**
@@ -68,9 +69,18 @@ public class NewMain {
         MateriaJpaController materiaDAO = new MateriaJpaController(factory);
         MateriaPlandeestudioJpaController relacionMateriaPlanDAO = new MateriaPlandeestudioJpaController(factory);
         AlumnoJpaController alumnoDAO = new AlumnoJpaController(factory);
+        
         CalificacionJpaController calificacionDAO = new CalificacionJpaController(factory);
 
+
         //System.out.println(planEstudioDAO.consultarPorNombre("PlanPruebas"));
+
+        List <Calificacion> listacalif = calificacionDAO.findCalificacionEntities();
+        System.out.println("\n\n" + listacalif.size());
+        for (Calificacion calificacion : listacalif) {
+            System.out.println(calificacion);
+        }
+
         
         
 //        Plandeestudio planEstudio = planEstudioDAO.findPlandeestudio(1);

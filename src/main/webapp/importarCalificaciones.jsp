@@ -5,7 +5,9 @@
 <%@page import="jwt.JWT"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="objetosNegocio.Alumno" %>
+<%@page import="objetosNegocio.Calificacion" %>
 <%@page import="java.util.List" %>
+<%@page import="servlets.importarCalificaciones" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
 <%
@@ -13,24 +15,25 @@
     response.setHeader("Cache-Control", "no-store");
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
-    
+
     List<Plandeestudio> listaPlanesEstudio = new ArrayList<>();
-    
+
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("sistemaUniversidades_XP_PU");
     PlandeestudioJpaController planEstudioDAO = new PlandeestudioJpaController(factory);
     listaPlanesEstudio = planEstudioDAO.findPlandeestudioEntities();
 
-    
-    List<Alumno> calificacionesRegistradas = new ArrayList<Alumno>();
+    List<Calificacion> calificaciones = new ArrayList<Calificacion>();
     List<Integer> camposVacios = new ArrayList<Integer>();
     List<Integer> calificacionesPreexistentes = new ArrayList<Integer>();
-    List<Integer> matriculaIncorrecta = new ArrayList<Integer>();
+    List<Integer> alumnoIncorrecto = new ArrayList<Integer>();
     List<Integer> claveMateriaIncorrecta = new ArrayList<Integer>();
     List<Integer> calificacionesIncorrectas = new ArrayList<Integer>();
+    List<Integer> camposVaciosMaterias = new ArrayList<Integer>();
+    List<String> listaTabla = new ArrayList<String>();
+    int numAlumnosRegistrados = 0;
 
     Boolean archivoInvalido = false;
 
-    /*
     if (JWT.validarJWT(request, response)) {
 
         List[] lista = (List[]) session.getAttribute("listaCalificaciones");
@@ -42,12 +45,15 @@
         }
 
         if (lista != null) {
-            calificacionesRegistradas = lista[0];
+            calificaciones = lista[0];
             camposVacios = lista[1];
             calificacionesPreexistentes = lista[2];
-            matriculaIncorrecta = lista[3];
+            alumnoIncorrecto = lista[3];
             claveMateriaIncorrecta = lista[4];
             calificacionesIncorrectas = lista[5];
+            camposVaciosMaterias = lista[6];
+            listaTabla = importarCalificaciones.listaDatosTabla;
+            numAlumnosRegistrados = importarCalificaciones.alumnosRegistrados;
         }
     } else {
         session = request.getSession();
@@ -55,7 +61,6 @@
         response.sendRedirect("inicioSesion.jsp");
 
     }
-     */
 %>
 <!DOCTYPE html>
 <html>
@@ -133,35 +138,66 @@
                             </thead>
                             <tbody>
 
-                                <% if (false) {
-                                        for (int i = 0; i < 10; i++) {
-                                            out.print("<tr>"
-                                                    + "<td scope=\"row\">" + 187962 + "</td>"
-                                                    + "<td>" + 9 + "</td>"
-                                                    + "<td>" + 9 + "</td>"
-                                                    + "<td>" + 8 + "</td>"
-                                                    + "<td>" + 7 + "</td>"
-                                                    + "<td>" + 8 + "</td>"
-                                                    + "<td>" + 7 + "</td>"
-                                                    + "<td>" + 10 + "</td>"
-                                                    + "<td>" + 9 + "</td>"
-                                                    + "</tr>"
-                                            );
+                                <%
+                                    if (!listaTabla.isEmpty()) {
+                                        int contadorAux = 0;
+                                        int contadorAlumnos = 0;
+
+                                        for (int i = 0; i < listaTabla.size(); i++) {
+                                            if (Integer.parseInt(listaTabla.get(i)) <= 10 || Integer.parseInt(listaTabla.get(i)) >= 0) {
+                                                if (Integer.parseInt(listaTabla.get(i)) == -1) {
+                                                        out.print("<td>" + "N/A" + "</td>");
+                                                    }else{
+                                                out.print("<td>" + listaTabla.get(i) + "</td>");
+                                                }
+                                                
+                                                contadorAux++;
+                                                if (contadorAux == 9) {
+                                                    out.print("</tr>");
+                                                    contadorAux = 0;
+                                                }
+                                            } else {
+                                                out.print("<tr>");
+                                                out.print("<td scope=\"row\">" + listaTabla.get(i) + "</td>");
+                                                contadorAlumnos++;
+                                                if (contadorAlumnos == numAlumnosRegistrados) {
+                                                        return;
+                                                    }
+                                            }
                                         }
+                                        importarCalificaciones.listaDatosTabla = null;
+                                        importarCalificaciones.alumnosRegistrados = 0;
                                     } else {
                                         out.print("<tr>"
                                                 + "<td scope=\"row\">187962</td>"
                                                 + "<td>10</td>"
+                                                + "<td>9</td>"
+                                                + "<td>10</td>"
+                                                + "<td>8</td>"
                                                 + "<td>10</td>"
                                                 + "<td>10</td>"
-                                                + "<td>10</td>"
-                                                + "<td>10</td>"
-                                                + "<td>10</td>"
-                                                + "<td>10</td>"
+                                                + "<td>9</td>"
                                                 + "<td>10</td>"
                                                 + "</tr>");
                                     }
 
+                                    /**
+                                     * if (!calificaciones.isEmpty()) { for (int
+                                     * i = 0; i < calificaciones.size(); i++) {
+                                     * Calificacion a = (Calificacion)
+                                     * calificaciones.get(i); out.print("<tr>" +
+                                     * "<td scope=\"row\">" +
+                                     * a.getAlumno().getMatricula() + "
+                                     * </td>" + "
+                                     * <td>" + a.getNota() + "</td>" + "<td>" +
+                                     * a.getNota() + "</td>" + "<td>" +
+                                     * a.getNota() + "</td>" + "<td>" +
+                                     * a.getNota() + "</td>" + "<td>" +
+                                     * a.getNota() + "</td>" + "<td>" +
+                                     * a.getNota() + "</td>" + "<td>" +
+                                     * a.getNota() + "</td>" + "<td>" +
+                                     * a.getNota() + "</td>" + "</tr>" ); } }
+                                     */
                                 %>
 
                             </tbody>
@@ -170,7 +206,105 @@
                 </div>
             </div>            
 
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (camposVacios.isEmpty()) {
+                    out.print("hidden");
+                } %>>
+                <h4 class="alert-heading">¡Campos vacios matriculas!</h4>
+                <p>En el archivo importado, las siguientes filas presentaban matriculas vacias: 
+                    <%
+                        if (!camposVacios.isEmpty()) {
+                            out.print(camposVacios.get(0));
+                            for (int i = 1; i < camposVacios.size(); i++) {
+                                out.print(", " + camposVacios.get(i));
+                            }
+                            out.print(".");
+                        }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
 
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (calificacionesPreexistentes.isEmpty()) {
+                    out.print("hidden");
+                } %>>
+                <h4 class="alert-heading">¡Calificaciones registradas!</h4>
+                <p>En el archivo importado, algunas calificaciones ya estaban registrados. Las filas de las calificaciones preexistentes según la materia son: <%
+                    if (!calificacionesPreexistentes.isEmpty()) {
+                        out.print(calificacionesPreexistentes.get(0));
+                        for (int i = 1; i < calificacionesPreexistentes.size(); i++) {
+                            out.print(", " + calificacionesPreexistentes.get(i));
+                        }
+                        out.print(".");
+                    }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-danger alert-dismissible fade show container-fluid" role="alert" <% if (!archivoInvalido) {
+                    out.print("hidden");
+                }%>>
+                <h4 class="alert-heading">¡Archivo invalido!</h4>
+                <p>El archivo importado no es compatible. Los archivos aceptados son con la extension: .xlsx, .xls y .csv.</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnoIncorrecto.isEmpty()) {
+                    out.print("hidden");
+                } %>>
+                <h4 class="alert-heading">¡Alumno inexistente!</h4>
+                <p>En el archivo importado, las filas siguientes no coincidian con nuestros registros de alumnos: <%
+                    if (!alumnoIncorrecto.isEmpty()) {
+                        out.print(alumnoIncorrecto.get(0));
+                        for (int i = 1; i < alumnoIncorrecto.size(); i++) {
+                            out.print(", " + alumnoIncorrecto.get(i));
+                        }
+                        out.print(".");
+                    }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (claveMateriaIncorrecta.isEmpty()) {
+                    out.print("hidden");
+                } %>>
+                <h4 class="alert-heading">¡Materia inexistente!</h4>
+                <p>En el archivo importado, las siguientes columnas no coincidian con nuestros registros de materias: <%
+                    if (!claveMateriaIncorrecta.isEmpty()) {
+                        out.print(claveMateriaIncorrecta.get(0));
+                        for (int i = 1; i < claveMateriaIncorrecta.size(); i++) {
+                            out.print(", " + claveMateriaIncorrecta.get(i));
+                        }
+                        out.print(".");
+                    }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (calificacionesIncorrectas.isEmpty()) {
+                    out.print("hidden");
+                } %>>
+                <h4 class="alert-heading">¡Formato incorrecto calificaciones!</h4>
+                <p>En el archivo importado, las siguientes filas presentaban algun error en el formato de calificaciones: <%
+                    if (!calificacionesIncorrectas.isEmpty()) {
+                        out.print(calificacionesIncorrectas.get(0));
+                        for (int i = 1; i < calificacionesIncorrectas.size(); i++) {
+                            out.print(", " + calificacionesIncorrectas.get(i));
+                        }
+                        out.print(".");
+                    }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (camposVaciosMaterias.isEmpty()) {
+                    out.print("hidden");
+                } %>>
+                <h4 class="alert-heading">¡Campos vacios materias!</h4>
+                <p>En el archivo importado, las siguientes columnas presentaban campos vacios en las claves de la materia: <%
+                    if (!camposVaciosMaterias.isEmpty()) {
+                        out.print(camposVaciosMaterias.get(0));
+                        for (int i = 1; i < camposVaciosMaterias.size(); i++) {
+                            out.print(", " + camposVaciosMaterias.get(i));
+                        }
+                        out.print(".");
+                    }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </article>
 
 
