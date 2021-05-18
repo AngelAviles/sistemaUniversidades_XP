@@ -55,6 +55,17 @@
         <h1 class="text-center">Administrar Planes de Estudio</h1>
         <hr />
         <hr />
+        
+        <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" 
+             <%
+                 if (request.getAttribute("siErrorPlan") == null) {
+                     out.print("hidden");
+                 }
+             %>
+             >
+            <h4 class="alert-heading">${siErrorPlan}</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
         <div class="container mt-12 col-lg-12">
             <div class="col-lg-12 card mx-2">
