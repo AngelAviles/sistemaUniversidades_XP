@@ -62,8 +62,7 @@
                      out.print("hidden");
                  }
              %>
-             >
-            <h4 class="alert-heading">${siErrorPlan}</h4>
+             <h4 class="alert-heading">${siErrorPlan}</h4>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 

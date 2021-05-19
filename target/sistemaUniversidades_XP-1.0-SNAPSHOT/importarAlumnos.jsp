@@ -11,21 +11,22 @@
     response.setHeader("Cache-Control", "no-store");
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
-    
+
     List<Alumno> alumnosRegistrados = new ArrayList<Alumno>();
     List<Integer> alumnosCamposVacios = new ArrayList<Integer>();
     List<Integer> alumnosPreexistentes = new ArrayList<Integer>();
     List<Integer> alumnosCurpIncorrecta = new ArrayList<Integer>();
     List<Integer> alumnosNombreIncorrecto = new ArrayList<Integer>();
     List<Integer> alumnosMatriculaIncorrecta = new ArrayList<Integer>();
+    List<Integer> alumnosPlanIncorrecto = new ArrayList<Integer>();
 
     Boolean archivoInvalido = false;
 
     if (JWT.validarJWT(request, response)) {
-        
+
         List[] lista = (List[]) session.getAttribute("listaAlumnos");
         session.removeAttribute("listaAlumnos");
-        
+
         if ((Boolean) session.getAttribute("archivoInvalido") != null) {
             archivoInvalido = (Boolean) session.getAttribute("archivoInvalido");
             session.removeAttribute("archivoInvalido");
@@ -38,6 +39,7 @@
             alumnosCurpIncorrecta = lista[3];
             alumnosNombreIncorrecto = lista[4];
             alumnosMatriculaIncorrecta = lista[5];
+            alumnosPlanIncorrecto = lista[6];
         }
     } else {
         session = request.getSession();
@@ -69,7 +71,7 @@
             <hr />
 
             <div class="container-fluid">
-                <div class="row align-items-center justify-content-center">
+                <div class="row justify-content-center">
                     <div class="col-auto">
                         <div class="border border-black border-3 mb-3">
                             <form action="importarAlumnos" method="post" enctype="multipart/form-data">
@@ -80,7 +82,7 @@
                                         <input class="form-control form-control-sm col" id="formFileSm" name="archivo"
                                                type="file" accept=".xls, .xlsx, .csv" required/>
                                         <i class="fa fa-question-circle col-sm-auto" title="Formato del archivo"
-                                           data-bs-content="El archivo debe contener la información de los alumnos ordenados de la siguiente manera: matricula, nombre y CURP. Puedes utilizar esta <a href='recursos/plantilla_importar_alumnos.xlsx' download='Plantilla de Importar Alumnos.xlsx'>plantilla</a>." data-bs-toggle="popover" data-bs-html="true" ></i>
+                                           data-bs-content="El archivo debe contener la información de los alumnos ordenados de la siguiente manera: matricula, nombre, CURP y plan de estudio. Puedes utilizar esta <a href='recursos/plantilla_importar_alumnos.xlsx' download='Plantilla de Importar Alumnos.xlsx'>plantilla</a>." data-bs-toggle="popover" data-bs-html="true" ></i>
                                     </div>
                                 </div>
                                 <div class="m-3">
@@ -100,7 +102,7 @@
                             </form>
                             <div class="m-3">
                                 <div class="d-grid gap-6 mx-auto">
-                                    <button class="btn btn-danger" onclick="location.href='menuPrincipal.jsp'">Cancelar</button>
+                                    <button class="btn btn-danger" onclick="location.href = 'administrarAlumnos.jsp'">Cancelar</button>
                                 </div>
                             </div>
                         </div>
@@ -112,6 +114,7 @@
                                     <th scope="col">Matricula</th>
                                     <th scope="col">Nombre</th>
                                     <th scope="col">CURP</th>
+                                    <th scope="col">PLAN ESTUDIO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -123,14 +126,16 @@
                                                     + "<td scope=\"row\">" + a.getMatricula() + "</td>"
                                                     + "<td>" + a.getNombre() + "</td>"
                                                     + "<td>" + a.getCurp() + "</td>"
+                                                    + "<td>" + a.getNumeroPlan() + "</td>"
                                                     + "</tr>"
                                             );
                                         }
                                     } else {
                                         out.print("<tr>"
                                                 + "<td scope=\"row\">1</td>"
-                                                + "<td>Angel</td>"
-                                                + "<td>curp</td>"
+                                                + "<td>ANGEL</td>"
+                                                + "<td>CURP</td>"
+                                                + "<td>1</td>"
                                                 + "</tr>");
                                     }
                                 %>
@@ -157,7 +162,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosPreexistentes.isEmpty()) {
-                        out.print("hidden");
+                    out.print("hidden");
                 } %>>
                 <h4 class="alert-heading">¡Alumnos registrados!</h4>
                 <p>En el archivo importado, algunos alumnos ya estaban registrados. Las filas de los alumnos que no fueron registrados son: <%
@@ -209,10 +214,10 @@
                     %></p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-                
+
             <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosMatriculaIncorrecta.isEmpty()) {
-                                    out.print("hidden");
-                                } %>>
+                    out.print("hidden");
+                } %>>
                 <h4 class="alert-heading">¡El formato de la matricula contiene letras o caracteres invalidos!</h4>
                 <p>En el archivo importado, las siguientes filas no contaban con un buen formato en su matricula: <%
                     if (!alumnosMatriculaIncorrecta.isEmpty()) {
@@ -225,7 +230,22 @@
                     %></p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-                
+            <div class="alert alert-warning alert-dismissible fade show container-fluid" role="alert" <% if (alumnosPlanIncorrecto.isEmpty()) {
+                        out.print("hidden");
+                    } %>>
+                <h4 class="alert-heading">¡El número de plan no coincide con un plan vigente!</h4>
+                <p>En el archivo importado, las siguientes filas no contaban con un plan de estudio correcto: <%
+                    if (!alumnosPlanIncorrecto.isEmpty()) {
+                        out.print(alumnosPlanIncorrecto.get(0));
+                        for (int i = 1; i < alumnosPlanIncorrecto.size(); i++) {
+                            out.print(", " + alumnosPlanIncorrecto.get(i));
+                        }
+                        out.print(".");
+                    }
+                    %></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
         </article>
 
 

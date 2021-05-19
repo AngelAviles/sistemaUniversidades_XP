@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import objetosNegocio.Materia;
 import objetosNegocio.MateriaPlandeestudio;
 import objetosNegocio.Plandeestudio;
+import javax.persistence.NoResultException;
 
 @WebServlet(name = "administrarPE", urlPatterns = {"/administrarPE"})
 public class administrarPE extends HttpServlet {
@@ -92,27 +93,31 @@ public class administrarPE extends HttpServlet {
         PlandeestudioJpaController planDAO = new PlandeestudioJpaController(factory);
         MateriaJpaController materiaDAO = new MateriaJpaController(factory);
 
-        Plandeestudio planNuevo = new Plandeestudio(request.getParameter("txtNombrePlan"));
-        planDAO.create(planNuevo);
+          Plandeestudio planNuevo = new Plandeestudio(request.getParameter("txtNombrePlan"));
+          
         
-        Plandeestudio planCreado = planDAO.consultarPorNombre(planNuevo.getNombre());
-        ArrayList<MateriaPlandeestudio> listaRelProductoVenta = new ArrayList<>();
+//        ArrayList<MateriaPlandeestudio> listaRelProductoVenta = new ArrayList<>();
 
         try{
             Plandeestudio compararPlan = planDAO.consultarPorNombre(nomPlan);
             request.setAttribute("siErrorPlan", "¡Ya existe un Plan de estudio registrado con el mismo nombre!");
             request.getRequestDispatcher("AdministrarPE.jsp").forward(request, response);
+
         }catch (NoResultException ex){
+
+            planDAO.create(planNuevo);
             for (int i = 1; i < 7; i++) {
                 for (int j = 1; j < 9; j++) {
                     Materia materia = materiaDAO.consultarPorNombre(request.getParameter("sem" + i + "mat" + j));
-                    MateriaPlandeestudio materiaPlan = new MateriaPlandeestudio(materia, planCreado);
+                    MateriaPlandeestudio materiaPlan = new MateriaPlandeestudio(materia, planNuevo);
                     relacionMateriaPlanDAO.create(materiaPlan);
+                    PrintWriter out = response.getWriter();       
+                    request.getRequestDispatcher("AdministrarPE.jsp").forward(request, response);
                 }
             }
         }        
 
-        request.getRequestDispatcher("AdministrarPE.jsp").forward(request, response);
+        
     }
 
     /**
